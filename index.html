@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="./src/css/style.css">
+    <link rel="stylesheet" href="./src/css/media.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
+</head>
+
+<body>
+    <header class='header'>
+        <nav class='nav'>
+            <a href="#home" class='nav-links'>Home</a>
+            <a href="#about" class='nav-links'>About me</a>
+            <a href="#experience" class='nav-links'>My experience</a>
+            <a href="#hobby" class='nav-links'>Hobbies</a>
+            <a href="#contact" class='nav-links'>Contacts</a>
+        </nav>
+    </header>
+    <main>
+        <section class="home" id='home'>
+            <h1 class='home-title'>Hello! I'm <span class='home-name'>Madina Akpaeva</span></h1>
+            <div class="main-box">
+                <img src='./src/imgs/my_photo.jpg' alt="" class='my-photo' />
+            </div>
+        </section>
+        <section class="about" id='about'>
+            <h1 class="about-title">
+                About me
+            </h1>
+            <div class="about-box">
+                <div class="about-photo">
+                    <img src='./src/imgs/my_photo_2.jpg' alt="" class="about-my-photo" />
+                </div>
+                <div class="about-text">
+                    I'm Madina. I study Computer Science at Ala-Too International University. I studied basics of
+                    Frontend Development for five months. Also study Arabic, teach Kyrgyz to students who are preparing
+                    for the exam (ОРТ). I don't regret choosing this university, I made a lot of new friends here )).
+                </div>
+            </div>
+        </section>
+        <section class="video">
+            <h1 class="video-title">
+                Watch an animated short film
+            </h1>
+            <div id="myCarousel" class="video-box">
+                <a data-fancybox="video-gallery" href="https://www.youtube.com/watch?v=0MX_fJAhmEE" class="video-link">
+                    <img src="./src/imgs/le-dinner.jpg.webp" width="350" height="250" class="video-img" />
+                </a>
+                <a data-fancybox="video-gallery" href="https://youtu.be/kNw8V_Fkw28" class="video-link">
+                    <img src="./src/imgs/how-to-watch-hair-love-short-film-1594236418.jpg" width="350" height="250"
+                        class="video-img" />
+                </a>
+                <a data-fancybox="video-gallery" href="https://youtu.be/-p1P4fdhaF8" class="video-link">
+                    <img src="./src/imgs/video-thumb-miralumo-1-1410x800.jpg" width="350" height="250"
+                        class="video-img" />
+                </a>
+            </div>
+        </section>
+        <section class="fetch">
+            <h1 class="fetch-title">
+                Fetch API
+            </h1>
+            <button type='click' class='api-btn' onclick="addActive()">Get Users</button>
+            <button class="fetch-delete" onclick="deleteAll()">
+                Delete all
+            </button>
+            <div class="fetch-box">
+
+            </div>
+        </section>
+        <section class="experience" id='experience'>
+            <h1 class="ex-title">
+                My Experience
+            </h1>
+            <div class="ex-box">
+                <div class='ex-min-box'>
+                    <div class="ex-text">HTML
+                        <span class="ex-min-text">Intermediate</span>
+                    </div>
+                    <div class="ex-text">CSS
+                        <span class="ex-min-text">Intermediate</span>
+                    </div>
+                </div>
+                <div class='ex-min-box'>
+                    <div class="ex-text">Git
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                    <div class="ex-text">JS
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                </div>
+                <div class='ex-min-box'>
+                    <div class="ex-text">ReactJS
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                    <div class="ex-text">NodeJS
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                </div>
+                <div class='ex-min-box'>
+                    <div class="ex-text">Python
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                    <div class="ex-text">Java
+                        <span class="ex-min-text">Basic</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="interesting">
+            <h1 class="interesting-title">
+                Interesting
+            </h1>
+            <div class="tabs">
+
+                <div class="tabs__caption">
+                    <div class="tabs-title active">Reading</div>
+                    <div class="tabs-title">Watching</div>
+                    <div class="tabs-title">Playing</div>
+                </div>
+
+                <div class="tabs__content active">
+                    <div class="tabs-content-title">
+                        The Best Books Ever
+                    </div>
+                    <div class="tabs-box">
+                        <div class="tabs-minbox">
+                            <a href="https://www.gutenberg.org/files/1399/1399-h/1399-h.htm"><img
+                                    src="./src/imgs/Greta-Garbo-Anna-Karenina-Clarence-Brown.webp" alt=""
+                                    class="tabs-img"></a>
+                            <p class="tabs-text">Anna Karenina</p>
+                            <button class="read-about">About</button>
+                            <p class="tabs-about">Written by Russian novelist Leo Tolstoy, the eight-part towering work
+                                of fiction tells the story of two major characters: a tragic, disenchanted housewife,
+                                the titular Anna, who runs off with her young lover, and a lovestruck landowner named
+                                Konstantin Levin, who struggles in faith and philosophy. Tolstoy molds together
+                                thoughtful discussions on love, pain, and family in Russian society with a sizable cast
+                                of characters regarded for their realistic humanity. The novel was especially
+                                revolutionary in its treatment of women, depicting prejudices and social hardships of
+                                the time with vivid emotion.</p>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a
+                                href="https://docs.google.com/viewer?a=v&pid=sites&srcid=YW5udXJpc2xhbWljc2Nob29sLm9yZ3xzaXN0ZXIta2F0ZWx5bnxneDo2NjVmZmE1NzNjNjc4NWM"><img
+                                    src="./src/imgs/book-cover-To-Kill-a-Mockingbird-many-1961.webp" alt=""
+                                    class="tabs-img"></a>
+                            <p class="tabs-text">To Kill a Mockingbird</p>
+                            <button class="read-about1">About</button>
+                            <p class="tabs-about1">Lee’s To Kill a Mockingbird was published in 1960 and became an
+                                immediate classic of literature. The novel examines racism in the American South through
+                                the innocent wide eyes of a clever young girl named Jean Louise (“Scout”) Finch. Its
+                                iconic characters, most notably the sympathetic and just lawyer and father Atticus
+                                Finch, served as role models and changed perspectives in the United States at a time
+                                when tensions regarding race were high. </p>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/MV5BMTkxNTk1ODcxNl5BMl5BanBnXkFtZTcwMDI1OTMzOQ@@._V1_.jpg"
+                                    alt="" class="tabs-img"></a>
+                            <p class="tabs-text">The Great Gatsby</p>
+                            <button class="read-about2">About</button>
+                            <p class="tabs-about2">F. Scott Fitzgerald’s The Great Gatsby is distinguished as one of the
+                                greatest texts for introducing students to the art of reading literature critically
+                                (which means you may have read it in school). The novel is told from the perspective of
+                                a young man named Nick Carraway who has recently moved to New York City and is
+                                befriended by his eccentric nouveau riche neighbor with mysterious origins, Jay Gatsby.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs__content">
+                    <div class="tabs-content-title">
+                        The Best Movies Ever
+                    </div>
+                    <div class="tabs-box">
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/9781493060887.jpg" alt="" class="tabs-img"></a>
+                            <p class="tabs-text">The Shawshank Redemption (1994)</p>
+                            <button class="tabs-btn"><a href="https://youtu.be/NmzuHjWmXOc">Watch trailer</a></button>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/759_LifeIsBeautiful_Catalog_Poster_v2_Approved.png" alt=""
+                                    class="tabs-img"></a>
+                            <p class="tabs-text">
+                                Life Is Beautiful (1997)</p>
+                            <button class="tabs-btn"><a href="https://youtu.be/8CTjcVr9Iao">Watch trailer</a></button>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/lord.jpg" alt="" class="tabs-img"></a>
+                            <p class="tabs-text">The Lord of the Rings (2001-2003)</p>
+                            <button class="tabs-btn"><a href="https://youtu.be/x8UAUAuKNcU">Watch trailer</a></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs__content">
+                    <div class="tabs-content-title">
+                        Interesting Games
+                    </div>
+                    <div class="tabs-box">
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/puzzle.webp" alt="" class="tabs-img"></a>
+                            <p class="tabs-text">Puzzles</p>
+                            <button class="tabs-btn"><a href="https://www.jigsawexplorer.com/">Play</a></button>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/sudoku.webp" alt="" class="tabs-img"></a>
+                            <p class="tabs-text">
+                                Sudoku</p>
+                            <button class="tabs-btn"><a href="https://sudoku.com/">Play</a></button>
+                        </div>
+                        <div class="tabs-minbox">
+                            <a href=""><img src="./src/imgs/Crosswords.png" alt="" class="tabs-img"></a>
+                            <p class="tabs-text">Crosswords</p>
+                            <button class="tabs-btn"><a href="https://www.dictionary.com/e/crossword/">Play</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="hobby" id='hobby'>
+            <h1 class="hobby-title">My hobbies</h1>
+            <div class="hobby-box">
+                <div class="hobby-min-box">
+                    <img src='./src/imgs/books.jpg' alt="" class='hobby-img' />
+                    <p>Reading</p>
+                </div>
+                <div class="hobby-min-box">
+                    <img src='./src/imgs/tennis.jfif' alt="" class='hobby-img' />
+                    <p>Ping pong</p>
+                </div>
+                <div class="hobby-min-box">
+                    <img src='./src/imgs/walk-in-park-1.jpg' alt="" class='hobby-img' />
+                    <p>Walking</p>
+                </div>
+                <div class="hobby-min-box">
+                    <img src='./src/imgs/flowers.jpg' alt="" class='hobby-img' />
+                    <p>Floriculture</p>
+                </div>
+                <div class="hobby-min-box">
+                    <img src='./src/imgs/cooking.jpg' alt="" class='hobby-img' />
+                    <p>Cooking</p>
+                </div>
+            </div>
+        </section>
+        <section class="contact" id='contact'>
+            <h1 class="contact-title">
+                Contact me
+            </h1>
+            <div class="contact-box">
+                <div class="contact-block">
+                    <div class="contact-min-box">
+                        <a href="mailto:madinaakpaeva000@gmail.com" class="contact-text"><img
+                                src='./src/imgs/Gmail_icon_(2020).svg.webp' alt="" class="contact-logo-gmail" /></a>
+                    </div>
+                    <div class="contact-min-box">
+                        <a href="https://github.com/Madina192" class="contact-text"><img src='./src/imgs/git.png' alt=""
+                                class="contact-logo" /></a>
+                    </div>
+                </div>
+                <div class="contact-block">
+                    <div class="contact-min-box">
+                        <a href="https://t.me/madinaakpaeva" class="contact-text"><img
+                                src='./src/imgs/Telegram_2019_Logo.svg.webp' alt="" class="contact-logo" /></a>
+                    </div>
+                    <div class="contact-min-box">
+                        <a href="https://www.instagram.com/madinaakpaeva/" class="contact-text"><img
+                                src='./src/imgs/Instagram_icon.png.webp' alt="" class="contact-logo" /></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="footer-mainbox">
+            <div class="footer-box">
+                <a href="tel:+996708131700">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+                <i class="fa-brands fa-facebook" id="footer-icon1"></i>
+                <a href="https://www.instagram.com/madinaakpaeva/">
+                    <i class="fa-brands fa-instagram" id="footer-icon1"></i>
+                </a>
+                <a href="https://t.me/madinaakpaeva">
+                    <i class="fa-brands fa-telegram" id="footer-icon1"></i>
+                </a>
+                <i class="fa-brands fa-twitter" id="footer-icon1"></i>
+                <i class="fa-brands fa-linkedin"></i>
+            </div>
+            <div class="footer-text">
+                <i class="fa-regular fa-copyright" id="footer-copyright"></i>
+                Madina. All rights reserved
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    <script src="./src/js/fetchAPI.js"></script>
+    <script src="./src/icons/all.min.js"></script>
+    <script src="./src/libs/jquery/jquery.js"></script>
+    <script src="./src/js/tabs.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+/**
+ * ==================================================================================
+ * 비지니스 로직 접속 정보 : 로컬 PC
+ * ==================================================================================
+ */
+
+// -- 운영기 접속
+var api_url = "http://mychild.goodneighbors.org:18080/apis";
+
+// -- 로컬 접속
+if(window.location.href.indexOf('localhost') >= 0 || window.location.href.indexOf('127.0.0.1') >= 0 || window.location.href.indexOf('new.gni.kr') >= 0) {
+ 	api_url = "http://127.0.0.1:18080/apis";
+}
+//-- 개발기 접속
+else if(window.location.href.indexOf('52.79.47.95') >= 0 || window.location.href.indexOf('dev.gni.kr') >= 0) {
+ 	api_url = 'http://52.79.47.95:18080/apis';
+}
+
+// ==================================================================================
+
+// -- Cloud Front Domain
+var s3_img_url = 'http://d20ljwr68qg2dx.cloudfront.net/';	// Good
+
+/**
+ * ==================================================================================
+ * 기타 기본 셋팅 정보
+ * ==================================================================================
+ */
+var noImgPath 	 = '/resources/img/noPreview.png';
+var dummyImgPath = '/resources/img/glass.jpg';
+
+var date_opts = {
+	dateFormat : 'mm-dd-yy',
+	altFormat  : 'yymmdd',
+	prevText   : '<i class="fa fa-chevron-left"></i>',
+	nextText   : '<i class="fa fa-chevron-right"></i>'
+};
+
+//페이지별 상세/등록/수정 화면 호출 시 사용
+var _page_ctrl = {
+	data 	: {},
+	setData : function(pageGbn, id) {
+		// pageGbn : R(상세), E(수정), W(등록)
+		_page_ctrl.data['gbn'] = pageGbn;
+		
+		// id      : 상세/수정 할 대상 id or seq
+		_page_ctrl.data['id']  = id;
+	},
+	getData : function(key) {
+		if(key == "gbn") {
+			return _page_ctrl.data['gbn'];
+		}
+		else if(key == "id") {
+			return _page_ctrl.data['id'];
+		}
+	},
+	clearData : function() {
+		_page_ctrl.data = {};
+	}
+};
+

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<!-- saved from url=(0101)http://mychild.goodneighbors.org/html/application/index.html#/html/application/service/gml/gmlPN.html -->
+<html lang="en-us" class="hidden-menu-mobile-lock"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>GML</title>
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	
+	<!-- #FAVICONS -->
+	<link rel="shortcut icon" href="http://mychild.goodneighbors.org/resources/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="http://mychild.goodneighbors.org/resources/img/favicon/favicon.ico" type="image/x-icon">
+	
+	<!-- #CSS Links Start-->
+<!-- 	<link rel="import" href="/html/include/inc_css.html"> -->
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/font-awesome.min.css">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/smartadmin-production-plugins.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/smartadmin-production.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/smartadmin-skins.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/smartadmin-rtl.min.css"> 
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/your_style.css"> 
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/demo.min.css">
+	
+	<link rel="stylesheet" type="text/css" href="./GML_files/jquery.fileupload.css">
+	
+	<link rel="stylesheet" href="./GML_files/css">
+	
+	<link rel="apple-touch-icon" href="http://mychild.goodneighbors.org/resources/img/splash/sptouch-icon-iphone.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="http://mychild.goodneighbors.org/resources/img/splash/touch-icon-ipad.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="http://mychild.goodneighbors.org/resources/img/splash/touch-icon-iphone-retina.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="http://mychild.goodneighbors.org/resources/img/splash/touch-icon-ipad-retina.png">
+	
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<link rel="apple-touch-startup-image" href="http://mychild.goodneighbors.org/resources/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+	<link rel="apple-touch-startup-image" href="http://mychild.goodneighbors.org/resources/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+	<link rel="apple-touch-startup-image" href="http://mychild.goodneighbors.org/resources/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="./GML_files/croppie.css">
+	<!-- #CSS Links End-->
+		
+	<script type="text/javascript" src="./GML_files/jquery-2.1.1.min.js.download"></script>
+	<script type="text/javascript" src="./GML_files/aws-sdk-2.283.1.min.js.download"></script>
+	<script type="text/javascript" src="./GML_files/i18next.min.js.download"></script>
+	<script type="text/javascript" src="./GML_files/api_config.js.download"></script>
+	
+	<!-- #script Links Start-->
+<!-- 	<link rel="import" href="/html/include/inc_script.html"> -->
+	<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+	<script src="./GML_files/jquery-ui-1.10.3.min.js.download"></script>
+	
+	<!-- IMPORTANT: APP CONFIG -->
+	<script src="./GML_files/app.config.js.download"></script>
+	
+	<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+	<script src="./GML_files/jquery.ui.touch-punch.min.js.download"></script>
+	
+	<!-- BOOTSTRAP JS -->
+	<script src="./GML_files/bootstrap.min.js.download"></script>
+	
+	<!-- CUSTOM NOTIFICATION -->
+	<script src="./GML_files/SmartNotification.min.js.download"></script>
+	
+	<!-- JARVIS WIDGETS -->
+	<script src="./GML_files/jarvis.widget.min.js.download"></script>
+	
+	<!-- EASY PIE CHARTS -->
+	<script src="./GML_files/jquery.easy-pie-chart.min.js.download"></script>
+	
+	<!-- SPARKLINES -->
+	<script src="./GML_files/jquery.sparkline.min.js.download"></script>
+	
+	<!-- JQUERY VALIDATE -->
+	<script src="./GML_files/jquery.validate.min.js.download"></script>
+	
+	<!-- JQUERY MASKED INPUT -->
+	<script src="./GML_files/jquery.maskedinput.min.js.download"></script>
+	
+	<!-- JQUERY TAGS INPUT -->
+	<script src="./GML_files/bootstrap-tagsinput.min.js.download"></script>
+	
+	<!-- JQUERY UI + Bootstrap Slider -->
+	<script src="./GML_files/bootstrap-slider.min.js.download"></script>
+	
+	<!-- JQUERY loadTemplate -->
+	<script src="./GML_files/jquery.loadTemplate-1.5.0.js.download"></script>
+	
+	<!-- JQUERY MONTH PICKER -->
+	<script src="./GML_files/jquery.mtz.monthpicker.js.download"></script>
+	
+	<!-- browser msie issue fix -->
+	<script src="./GML_files/jquery.mb.browser.min.js.download"></script>
+	
+	<!-- FastClick: For mobile devices: you can disable this in app.js -->
+	<script src="./GML_files/fastclick.min.js.download"></script>
+	
+	<!-- Croppie.js -->
+	<script src="./GML_files/croppie.min.js.download"></script>
+	
+	<!--[if IE 8]>
+		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+	<![endif]-->
+	
+	<!-- Demo purpose only 
+	<script src="/resources/js/demo.min.js"></script>-->
+	
+	<!-- MAIN APP JS FILE -->
+	<script src="./GML_files/app.js.download"></script>
+	<script src="./GML_files/grid.css.js.download"></script>
+	
+	<script src="./GML_files/hashmap.js.download"></script>
+	<script src="./GML_files/jquery.fileDownload.js.download"></script>
+	<script src="./GML_files/jquery.uploader.js.download"></script>
+	
+	<script src="./GML_files/jquery.money.js.download"></script>
+	
+	<!-- SmartChat UI : plugin -->
+	<script src="./GML_files/smart.chat.ui.min.js.download"></script>
+	<script src="./GML_files/smart.chat.manager.min.js.download"></script>
+	
+	<!-- JavaScript Load Image -->
+	<script src="./GML_files/load-image.all.min.js.download"></script>
+	
+	<!-- #script Links End-->
+	
+	
+	<script type="text/javascript" src="./GML_files/common_lang_script.js.download"></script>
+	<script type="text/javascript" src="./GML_files/common_code_script.js.download"></script>
+	<script type="text/javascript" src="./GML_files/common_document.js.download"></script>
+	<script type="text/javascript" src="./GML_files/common_dialog_script.js.download"></script>
+	<script type="text/javascript" src="./GML_files/common_script.js.download"></script>
+	<script type="text/javascript" src="./GML_files/common_util_script.js.download"></script>
+	<script type="text/javascript" src="./GML_files/formValid.js.download"></script>
+	<script type="text/javascript" src="./GML_files/searchVaild.js.download"></script>
+	<script type="text/javascript" src="./GML_files/serializeFormObject.js.download"></script>
+
+	<script type="text/javascript" src="./GML_files/common_aws_script.js.download"></script>
+	
+	<script type="text/javascript">
+	if(localStorage.access_token == undefined) {
+		alert('Login information is missing.')
+		location.href = '/html/application/login.html';
+	}
+		
+	$(document).ready(function() {
+		$("#left-panel").load("/html/include/inc_left.html", function(){
+			$(this).prepend($("<div/>").addClass("login-info"));
+			
+			var reloadUrl = window.location.hash.replace("#", '');
+		    if(reloadUrl != "") {
+		    	loadURL(reloadUrl, $('#content'));
+		    }
+		});
+	});
+	
+	$.local_lang = $.i18n.options.resStore[localStorage.getItem('lang')];
+		</script>
+<style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+
+<body class="desktop-detected fixed-header fixed-navigation fixed-ribbon hidden-menu" style="">
+
+	<!-- #HEADER -->
+	<header id="header">
+		<div id="logo-group">
+			<!-- PLACE YOUR LOGO HERE -->
+			<span id="logo">
+				<a href="javascript:f_main();"><img src="./GML_files/logoImage.png" alt="" style="width: 100%"></a>
+			</span>
+			<!-- END LOGO PLACEHOLDER -->
+		</div>
+		<!-- 임시 코딩... 내려오는 이미지 사이즈 확인후 css 수정 필요 -->
+		<div class="ta-c mt13 hidden-xs">
+			<span><img id="country_image" style="width:33%" src="./GML_files/KGZ.png" alt=""></span>
+		</div>
+
+		<div class="project-context hidden-xs">
+			<span class="label">Name</span>
+			<span class="project-selector" id="loginName">Aziza Maratbek kyzy</span>
+		</div>
+
+		<div class="project-context hidden-xs">
+			<span class="label">Level</span>
+			<span class="project-selector" id="loginLevel">Kyrgyz Republic CDP staff</span>
+		</div>
+		<!-- #TOGGLE LAYOUT BUTTONS -->
+		<!-- pulled right: nav area -->
+		<div class="pull-right">
+			
+			<!-- collapse menu button -->
+			<div id="hide-menu" class="btn-header pull-right">
+				<span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+			</div>
+			<!-- end collapse menu -->
+			
+			<!-- logout button -->
+			<div id="logout" class="btn-header transparent pull-right">
+				<span> <a href="javascript:void(0);" title="Sign Out" data-action="userLogout" data-logout-msg="정말로 로그아웃을 하시겠습니까?"><i class="fa fa-sign-out"></i></a> </span>
+			</div>
+			<!-- end logout button -->
+
+			<!-- fullscreen button -->
+			<div id="fullscreen" class="btn-header transparent pull-right">
+				<span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
+			</div>
+			<!-- end fullscreen button -->
+
+		</div>
+		<!-- end pulled right: nav area -->
+	</header>
+	<!-- END HEADER -->
+	
+	<!-- Left panel : Navigation area -->
+	<aside id="left-panel"><div class="login-info"></div><nav>
+	<!-- 
+	NOTE: Notice the gaps after each icon usage <i></i>..
+	Please note that these links work a bit different than
+	traditional href="" links. See documentation for details.
+	-->
+
+	<ul id="menuTree" style=""><li><a href="http://mychild.goodneighbors.org/html/application/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> Dashboard</a></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Board</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/board/noti/notiPN.html" title="Notification">Notification</a></li><li><a href="http://mychild.goodneighbors.org/html/application/board/qna/qnaPN.html" title="Q&amp;A">Q&amp;A</a></li><li><a href="http://mychild.goodneighbors.org/html/application/board/reference/referencePN.html" title="Reference">Reference</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/profile/profilePN.html" title="Profile"><i class="fa fa-lg fa-fw fa-user"></i> Profile</a></li><li class="open active"><a href="http://mychild.goodneighbors.org/html/application/index.html#"><i class="fa fa-lg fa-fw fa-globe"></i> <span class="menu-item-parent">Service</span><b class="collapse-sign"><em class="fa fa-minus-square-o"></em></b></a><ul style="display: block;"><li class=""><a href="http://mychild.goodneighbors.org/html/application/service/cif/cifPN.html" title="CIF">CIF</a></li><li><a href="http://mychild.goodneighbors.org/html/application/service/apr/aprPN.html" title="APR">APR</a></li><li><a href="http://mychild.goodneighbors.org/html/application/service/acl/aclPN.html" title="ACL">ACL</a></li><li class="active"><a href="http://mychild.goodneighbors.org/html/application/service/gml/gmlPN.html" title="GML">GML</a></li><li><a href="http://mychild.goodneighbors.org/html/application/service/dropout/dropoutPN.html" title="DROP-OUT">DROP-OUT</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Statistics</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/index.html#">Health Status<b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/statistics/health/disbilns/statDisbIlnsPN.html" title="Disability/Illness">Disability/Illness</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/health/bmi/statBmiPN.html" title="BMI">BMI</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#">Education<b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/statistics/education/school/statSchoolPN.html" title="School Promotion">School Promotion</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#">Service<b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/supplyplan/statSupplyPlanPN.html" title="Supply Plan Management">Supply Plan Management</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/cif/statCifPN.html" title="CIF Submission">CIF Submission</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/apr/statAprPN.html" title="APR Submission">APR Submission</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/acl/statAclPN.html" title="ACL Submission">ACL Submission</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/letter/statLetterPN.html" title="LTR Submission">LTR Submission</a></li><li><a href="http://mychild.goodneighbors.org/html/application/statistics/report/giftmoney/statGiftMoneyPN.html" title="GMR Submission">GMR Submission</a></li></ul></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Provided Service</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/provided/child/childPN.html" title="Child/Family">Child/Family</a></li><li><a href="http://mychild.goodneighbors.org/html/application/provided/village/villagePN.html" title="Village">Village</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/index.html#"><i class="fa fa-lg fa-fw fa-heart"></i> <span class="menu-item-parent">Counseling</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a><ul><li><a href="http://mychild.goodneighbors.org/html/application/counseling/special/specialPN.html" title="Special">Special</a></li><li><a href="http://mychild.goodneighbors.org/html/application/counseling/general/generalPN.html" title="General">General</a></li></ul></li><li><a href="http://mychild.goodneighbors.org/html/application/sync/syncPN.html" title="Sync Data"><i class="fa fa-lg fa-fw fa-refresh"></i> Sync Data</a></li></ul>
+</nav>
+
+<!-- <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span> -->
+			
+<script type="text/javascript">
+var getMenuTree = function (itemData, idx) {
+	var item = "";
+	
+	if (itemData.menu_items.length > 0) {
+		var append = "";
+		if(idx == 0) {
+			append += "<a href='#'><i class='fa fa-lg fa-fw "+itemData.menu_icon_nm+"'></i> <span class='menu-item-parent'>"+itemData.menu_nm+"</span></a>";	
+		}
+		else {
+			append += "<a href='#'>"+itemData.menu_nm+"</a>";
+		}
+		
+		item = $("<li>").html(append);	
+	}
+	else {
+		var append = "";
+		
+		if(itemData.menuId == '00010') {
+			append += "<a href='"+itemData.url+"' title='"+itemData.menu_nm+"'><i class='fa fa-lg fa-fw fa-home'></i> <span class='menu-item-parent'>"+itemData.menu_nm+"</span></a>";
+		}
+		else {
+			if(idx == 0) {
+				append += "<a href='"+itemData.url+"' title='"+itemData.menu_nm+"'><i class='fa fa-lg fa-fw "+itemData.menu_icon_nm+"'></i> "+itemData.menu_nm+"</a>";	
+			}
+			else {
+				append += "<a href='"+itemData.url+"' title='"+itemData.menu_nm+"'>"+itemData.menu_nm+"</a>";	
+			}
+		}
+		
+		item = $("<li>").html(append);
+	}
+	
+    if (itemData.menu_items.length > 0) {
+        var subList = $("<ul>");
+        
+        $.each(itemData.menu_items, function () {
+            subList.append(getMenuTree(this,(idx+1)));
+        });
+        
+        item.append(subList);
+    }
+    
+    return item;
+};
+
+$(function() {
+	var menuList = JSON.parse(localStorage['menu_list']);
+	
+	var menu = $("#menuTree");
+	menu.empty();
+	
+	var parent = menuList[0].menu_items;
+	
+	var cnt = 0;
+	$.each(parent, function(i, items) {
+		menu.append(getMenuTree(items, 0));
+		cnt++;
+		
+		if(cnt == parent.length) {
+		 	refreshURL();
+		 	initApp.leftNav();
+		}
+	});
+});
+
+
+/** 메뉴 이동 */
+function f_openMenu(path, params) {
+	$('nav li.active').removeClass('active');
+	
+	$('nav li.open').has('ul').not(':has(a[href="' + path + '"])').each(function() {
+		$(this).children('ul').slideUp(200);
+		$(this).find('a b').html('<em class="fa fa-plus-square-o"></em>');
+		$(this).removeClass('open');
+	});
+	
+	var targetMenu = $('nav li a[href="' + path + '"]');
+	
+	targetMenu.parents('li').has('ul').addClass('active');
+	targetMenu.parents('li').has('ul').find('a b').html('<em class="fa fa-minus-square-o"></em>');
+	targetMenu.parent().addClass('active');
+	
+	targetMenu.parents('li').has('ul').each(function() {
+		if(!$(this).hasClass('open')) {
+			$(this).addClass('open'); 
+			$(this).children('ul').slideDown(200);
+		}
+	});
+	
+	drawBreadCrumb();
+
+	f_loadPage(path, params);
+}
+	
+/** 페이지 로드 */
+function f_loadPage(path, params) {	
+	window.location.hash = path + params;
+	var url = location.href.split('#').splice(1).join('#');
+	if (!url) {
+		try {
+			var documentUrl = window.document.URL;
+			if (documentUrl) {
+				if (documentUrl.indexOf('#', 0) > 0 && documentUrl.indexOf('#', 0) < (documentUrl.length + 1)) {
+					url = documentUrl.substring(documentUrl.indexOf('#', 0) + 1);
+				}
+			}
+		} catch (err) {}
+	}
+	container = $('#content');
+	
+	var title = ($('nav a[href="' + url + '"]').attr('title'));
+	document.title = (title || document.title);
+	
+	$.ajax({
+		type : "GET",
+		url : url + location.search,
+		dataType : 'html',
+		async : true,
+		cache : true,
+		success : function(data) {
+			container.css({
+				opacity : '0.0'
+			}).html(data).delay(50).animate({
+				opacity : '1.0'
+			}, 300);
+			data = null;
+			container = null;
+		},
+		error : function(xhr, status, thrownError, error) {
+			container.html('<h4 class="ajax-loading-error"><i class="fa fa-warning txt-color-orangeDark"></i>'+
+					'Error requesting <span class="txt-color-red">' + url + '</span>: ' + xhr.status + ' <span style="text-transform: capitalize;">'  + thrownError + '</span></h4>');
+		},
+		complete: function() {
+		}
+	});
+}
+</script>
+			
+			</aside>
+	<!-- end Left panel -->
+	
+	<!-- #MAIN PANEL -->
+	<div id="main" role="main">
+		<!-- RIBBON -->
+		<div id="ribbon">
+			<span class="ribbon-button-alignment"> 
+				<span class="btn btn-ribbon"><i class="fa fa-th"></i></span> 
+			</span>
+			<ol class="breadcrumb" id="breadcrumb"><li>Home</li><li>Service</li><li>GML</li></ol>
+			<div class="widget-body"></div>
+		</div>
+		<!-- END RIBBON -->
+
+		<!-- #MAIN CONTENT -->
+		<div id="content" style="opacity: 1;"><script type="text/javascript" src="./GML_files/gml.js.download"></script>
+<script type="text/javascript">
+	var searchInfo = {
+		
+	}
+	
+	$("#targetHtml").load("/html/application/service/gml/gmlLN.html");
+</script>
+
+<div id="targetHtml"><section id="widget-grid" class="">
+	<article class="col-xs-4 col-sm-4 col-md-4 col-lg-4 sortable-grid ui-sortable">
+		<div class="jarviswidget jarviswidget-color-darken jarviswidget-sortable" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false" role="widget">
+			<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> </div>
+				<span class="widget-icon"> <i class="fa fa-search"></i> </span>
+				<h2 data-i18n="letter:letter_image">Letter Image</h2>
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			<div class="widget-body" role="content">
+				<form id="frmSearch" class="form-horizontal">
+					<fieldset>
+						<div class="form-group">
+							<label class="col-md-4 control-label cs-css-05" data-i18n="letter:support_country">Support Country</label>
+							<div class="col-md-6">
+								 <span class="form-control cs-css-03" id="dnctr_cd_nm">KOREA</span>
+							</div>
+						</div>
+					</fieldset>
+					
+					<legend></legend>
+					
+					<fieldset>
+						<div class="form-group">
+							<label class="col-md-3 control-label cs-css-05"><span>*</span><span data-i18n="letter:child_image">Child Image</span></label>
+							<div class="col-md-6">
+								<input class="form-control btn btn-default" type="file" data-img-id="imgFile01" id="img_file_01" name="imgFile" accept=".jpg">
+							</div>
+							<button type="button" class="del-button">Del</button>
+						</div>
+						<div class="form-group">
+							<img class="col-xs-12 col-sm-12 col-md-12" id="imgFile01" src="http://mychild.goodneighbors.org/html/application/index.html" alt="">
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-3 control-label cs-css-05"><span>*</span><span data-i18n="gml:video">Video</span></label>
+							<div class="col-md-6">
+								<input class="form-control btn btn-default" type="file" data-img-id="videoFile" id="video_file" name="videoFile" accept=".mp4">
+							</div>
+							<button type="button" class="del-button">Del</button>
+						</div>						
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</article>
+	
+	<article class="col-xs-8 col-sm-8 col-md-8 col-lg-8 sortable-grid ui-sortable">
+		<div class="jarviswidget jarviswidget-color-darken jarviswidget-sortable" id="wid-id-1" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false" role="widget">
+			<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> </div>
+				<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+				<h2 id="year_title">202209</h2><h2 data-i18n="letter:gml_Card">Card</h2>
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			<div class="widget-body" role="content">
+				<form id="frmLetter" class="form-horizontal">
+					<fieldset>
+					
+						<!-- Unable to Register Area -->
+							
+							<!-- Unable to Register Area 끝 -->
+						
+						
+					
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:child_name">Child Name</label>
+							<div class="col-md-4">
+								<span class="form-control cs-css-03" id="ch_enm">Alinur Akimzhanov</span>
+							</div>
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:child_code">Child Code</label>
+							<div class="col-md-4">
+								<span class="form-control cs-css-03" id="cdp_cd">KGZ-0104-002250</span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:gender">Gender</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="gndr">Male</span>
+							</div>
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:birthdate">Birthdate</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="bday">02-28-2009</span>
+							</div>
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:age">Age</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="age">12</span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:school_type">School Type</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="sctp_cd_nm">Others</span>
+							</div>
+						
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:school_name">School Name</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="schl_nm">Nurgaziev</span>
+							</div>
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:grade">Grade</label>
+							<div class="col-md-2">
+								<span class="form-control cs-css-03" id="grad">7</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:enclosed_list">Enclosed list</label>
+							<div class="col-md-6">
+								<span class="form-control cs-css-03" id="letr_enclo_artcl"></span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:sponsor_name">Sponsor Name</label>
+							<div class="col-md-3">
+								<span class="form-control cs-css-03" id="letr_relmem_nm">KIMwoojin</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05" data-i18n="letter:sponsors_letter">Sponsor's Letter</label>
+							<div class="col-md-10">
+								<a href="javascript:go_imageMultiplePopup();" class="btn btn-success"><i class="fa fa-search"></i><span data-i18n="common:view">View</span></a>
+								<!-- <textarea class="form-control cs-css-03 cs-css-06" id="letr_tran_adct" style="background-color: white; cursor: auto;" rows="7" readonly="readonly"></textarea> -->
+								<div class="form-control cs-css-03 cs-css-06" id="letr_tran_adct" style="background-color: white; cursor: auto; white-space:pre;"></div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05"><legend><span data-i18n="letter:sponsor_card_reply">Sponsor's Card Reply</span></legend></label>
+							<br><br><br><br>
+							<div id="card_info_div">
+							<div class="form-group"><label class="col-md-2 control-label cs-css-05">*I AM</label><div class="col-md-4" style="display: flex;"><select class="form-control" id="ans_cd_0" name="ans_cd"><option value="" selected="selected"></option><option value="1" data-chgp-cd="">happy to meet you.</option><option value="2" data-chgp-cd="">pleased to meet you.</option><option value="3" data-chgp-cd="">grateful to meet you.</option><option value="4" data-chgp-cd="">excited to meet you.</option><option value="5" data-chgp-cd="">supportive to meet you.</option></select><input type="hidden" id="card_cd0" name="card_cd" value="370001"><input class="form-control col-md-4" name="oth_cd" style="display: none;"></div></div><div class="form-group"><label class="col-md-2 control-label cs-css-05">*I believe that you are</label><div class="col-md-4" style="display: flex;"><select class="form-control" id="ans_cd_1" name="ans_cd"><option value="" selected="selected"></option><option value="1" data-chgp-cd="">kind.</option><option value="2" data-chgp-cd="">smart.</option><option value="3" data-chgp-cd="">powerful.</option><option value="4" data-chgp-cd="">cute.</option><option value="5" data-chgp-cd="">beautiful.</option><option value="6" data-chgp-cd="">strong.</option></select><input type="hidden" id="card_cd1" name="card_cd" value="370002"><input class="form-control col-md-4" name="oth_cd" style="display: none;"></div></div><div class="form-group"><label class="col-md-2 control-label cs-css-05">*The fruit I like is</label><div class="col-md-4" style="display: flex;"><select class="form-control" id="ans_cd_2" name="ans_cd"><option value="" selected="selected"></option><option value="1" data-chgp-cd="">orange.</option><option value="2" data-chgp-cd="">watermelon.</option><option value="3" data-chgp-cd="">apple.</option><option value="4" data-chgp-cd="">tomato.</option><option value="5" data-chgp-cd="">mango.</option><option value="6" data-chgp-cd="">avocado.</option><option value="7" data-chgp-cd="">durian.</option><option value="8" data-chgp-cd="">banana.</option><option value="9" data-chgp-cd="">kiwi.</option><option value="10" data-chgp-cd="">grapes.</option><option value="11" data-chgp-cd="">papaya.</option><option value="12" data-chgp-cd="">peach.</option><option value="13" data-chgp-cd="">starfruit.</option><option value="14" data-chgp-cd="">cherry.</option><option value="15" data-chgp-cd="">pomegranate.</option><option value="16" data-chgp-cd="">pear.</option><option value="17" data-chgp-cd="">plum.</option><option value="18" data-chgp-cd="">fig.</option><option value="19" data-chgp-cd="">blueberry.</option><option value="20" data-chgp-cd="">melon.</option><option value="21" data-chgp-cd="">strawberry.</option><option value="22" data-chgp-cd="">pineapple.</option><option value="23" data-chgp-cd="">grapefruit.</option><option value="24" data-chgp-cd="">apricot.</option><option value="99" data-chgp-cd="">others.</option></select><input type="hidden" id="card_cd2" name="card_cd" value="370003"><input class="form-control col-md-4" name="oth_cd" style="display: none;"></div></div><div class="form-group"><label class="col-md-2 control-label cs-css-05">*The animal I like is</label><div class="col-md-4" style="display: flex;"><select class="form-control" id="ans_cd_3" name="ans_cd"><option value="" selected="selected"></option><option value="1" data-chgp-cd="">dog.</option><option value="2" data-chgp-cd="">cat.</option><option value="3" data-chgp-cd="">horse.</option><option value="4" data-chgp-cd="">lion.</option><option value="5" data-chgp-cd="">tiger.</option><option value="6" data-chgp-cd="">monkey.</option><option value="7" data-chgp-cd="">rabbit.</option><option value="8" data-chgp-cd="">chicken.</option><option value="9" data-chgp-cd="">pig.</option><option value="10" data-chgp-cd="">sheep.</option><option value="11" data-chgp-cd="">goat.</option><option value="12" data-chgp-cd="">bird.</option><option value="13" data-chgp-cd="">giraffe.</option><option value="14" data-chgp-cd="">elephant.</option><option value="15" data-chgp-cd="">bug.</option><option value="16" data-chgp-cd="">camel.</option><option value="99" data-chgp-cd="">others.</option></select><input type="hidden" id="card_cd3" name="card_cd" value="370004"><input class="form-control col-md-4" name="oth_cd" style="display: none;"></div></div><div class="form-group"><label class="col-md-2 control-label cs-css-05">*The color I like is</label><div class="col-md-4" style="display: flex;"><select class="form-control" id="ans_cd_4" name="ans_cd"><option value="" selected="selected"></option><option value="1" data-chgp-cd="">red.</option><option value="2" data-chgp-cd="">orange.</option><option value="3" data-chgp-cd="">yellow.</option><option value="4" data-chgp-cd="">green.</option><option value="5" data-chgp-cd="">blue.</option><option value="6" data-chgp-cd="">navy.</option><option value="7" data-chgp-cd="">pink.</option><option value="8" data-chgp-cd="">purple.</option><option value="9" data-chgp-cd="">grey.</option><option value="10" data-chgp-cd="">black.</option><option value="11" data-chgp-cd="">white.</option></select><input type="hidden" id="card_cd4" name="card_cd" value="370005"><input class="form-control col-md-4" name="oth_cd" style="display: none;"></div></div></div>
+						</div>										
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label cs-css-05"><span data-i18n="letter:remark">Remark</span></label>
+							<div class="col-md-10">
+								<textarea class="form-control valid_check" id="remrk_eng" name="remrk_eng" rows="5" data-valid-max="2000" data-valid-alphanumeric="true" data-valid-title=""></textarea>
+							</div>
+						</div>
+					</fieldset>
+					
+					<div class="form-actions mt0 mbAuto">
+						<div class="row">
+							<div class="col-md-12">
+								<a href="javascript:f_cardRegister();" id="" class="btn btn-success"><i class="fa fa-check"></i> <span data-i18n="common:register">Register</span></a>
+								<a id="" class="btn btn-info" data-toggle="modal" data-target="#leave_modal"><i class="fa fa-reorder"></i> <span data-i18n="common:cancel">Cancel</span></a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</article>
+</section>
+
+<!-- 모달 팝업(작업 취소, 페이지 이동 팝업) -->
+<div class="modal fade" id="leave_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span><span class="sr-only" data-i18n="alert_msg:close">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel"></h4>
+			</div>
+			<div class="modal-body" data-i18n="common:popup_comment_leave">Are you sure you want to leave this page? If you leave this page, this data will be deleted.</div>
+			<div class="modal-footer">
+				<button type="button" id="btn_leave" class="btn btn-default" onclick="go_gmlLN()" data-i18n="alert_msg:leave_this_page">Leave this page</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-i18n="alert_msg:stay_on_this_page">Stay on this page</button> 
+			</div> 
+		</div> 
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+//팝업 닫기버튼 클릭
+$("#btn_leave").click(function(){
+	$('body').removeClass('modal-open');
+});
+
+//글자 수 2000자 카운터
+$('#remrk_eng').on('keyup', function() {
+	if($(this).val().length > 2000) {
+	    $(this).val($(this).val().substring(0, 2000));
+	}
+});
+
+//Unable to register 선택 시 입력란 비활성화
+$("#unable_reg_yn").on('change', function(){
+	 if($("#unable_reg_yn").is(':checked')){
+		 $("#frmLetter").find(
+			'input[type=checkbox], input[type=tel], input[type=email],'+
+			'input[type=number], input[type=text], input[type=password], select, textarea, input[type=file],' +
+			'input[type=radio]'
+		 ).each(function(){
+			$(this).attr('disabled', true);
+			if($(this).attr("name") != "swrt_yn"){
+				$(this).val("");
+			}
+		 });
+		 $("input[type=file]").attr('disabled', true);
+		 $("#unable_reg_yn").attr('disabled', false);
+	 }
+	 else{
+		 $("#frmLetter").find(
+			'input[type=hidden], input[type=checkbox], input[type=tel], input[type=email],'+
+			'input[type=number], input[type=text], input[type=password], select, textarea, input[type=file]'
+		 ).each(function(){
+			$(this).attr('disabled', false);
+		 });
+		 $("input[type=file]").attr('disabled', false);
+		 $("#unable_reg_yn").attr('disabled', false);
+	 }
+});
+
+/**
+ * ==================================================================================
+ * 이미지 팝업
+ * ==================================================================================
+ */
+$('#multiImagePopup').dialog({
+	autoOpen : false,
+	width : 900,
+	minHeight: 650,
+	resizable : false,
+	modal : true,
+	title : "<div class='widget-header'><h6><i class='fa fa-file-photo-o'></i> Letter</h6></div>",
+	buttons : [{
+		html : "<i class='fa fa-times'></i>&nbsp; Cancel",
+		"class" : "btn btn-default",
+		click : function() {
+			$(this).dialog("close");
+		}
+	}],
+	close : function(){
+		
+	}
+});
+
+//이미지 파일 변경 시
+$("#img_file_01").on('change', function(){
+	if(!checkFileExt(this, "I") || (!checkFileSize(this, childMaxSize))){
+		$(this).val("");
+		$("#" + $(this).attr("data-img-id")).attr('src', "");
+		return false;
+	}
+});
+
+//동영상 파일 변경 시
+$("#video_file").on('change', function(){
+	if(!checkFileExt(this, "V") || (!checkFileSize(this, videoMaxSize))){
+		$(this).val("");
+		return false;
+	}
+});
+
+//삭제버튼 클릭 시
+$(".del-button").on('click', function() {
+	
+	var target = $(this).parent().find('div input');
+	var chk = target.attr("data-img-id");
+	
+	// 이미지 파일 삭제 시
+	if(chk != 'videoFile') 
+	{
+		target.val("");
+		$("#" + target.attr("data-img-id")).attr('src', "");
+	}
+	// 동영상 파일 삭제 시
+	else
+	{
+		target.val("");
+	}
+	
+});
+
+/**
+ * ==================================================================================
+ * 이미지 미리보기
+ * ==================================================================================
+ */
+$("input[name='imgFile']").on('change', function(){
+    var _target = '#'+$(this).attr('data-img-id');
+    readURL(this, _target);
+});
+
+
+/**
+ * ==================================================================================
+ * 이미지 미리보기
+ * ==================================================================================
+ */
+var _imgArr = [];
+
+function readURL(input,target) {
+
+    if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+	    
+		reader.onload = function (e) {
+            
+			loadImage(
+				e.target.result,
+			    function (img) {
+			        if(img.type === "error") {
+			            console.log("Error loading image " + imageUrl);
+			        } else {
+			        	$(target).attr('src', img.toDataURL());
+			        	
+			        	img.toBlob(function(blob) {
+			        		if(target == "#imgFile01") {
+			        			_imgArr[0] = blob;
+			        		} else {
+			        			console.log("Error loading image " + imageUrl);
+			        		}
+			        	}, 'image/jpeg', 0.9);
+			        }
+			    },
+			    {maxWidth: 500, orientation: true, canvas: true}
+			);
+		}
+
+       reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+
+/**
+ * ==================================================================================
+ * TODO
+ * 카드 답변목록 Others 인 경우 입력란 활성화
+ * ==================================================================================
+ */
+/* $(document).on("change", "select[name='ans_cd']", function(event){
+	if($(this).val() == '99'){		
+		$(this).parent().find("input[name='oth_cd']").show();
+	} else {
+		$(this).parent().find("input[name='oth_cd']").hide();
+	}
+	
+}); */
+
+
+
+/* ============================================================================================
+/* 페이지 정보 설정
+// /* --------------------------------------------------------------------------------------------
+/* 초기 설정 및 필요 UI 컴포넌트 셋팅
+/* ============================================================================================ */
+var pagefunction = function() {
+	
+	$("#year_title").text(searchInfo.rcp_dt);
+	
+	f_selectCardInfoList();
+	var _data = {};
+
+	_data["chrcp_no"] = searchInfo.chrcp_no;
+	_data["mng_no"] = searchInfo.mng_no;
+
+	$.ajax({
+	    url: api_url + '/bo/report/gml/api-204-0408',
+	    type: 'GET', 
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: encodeURI("params="+JSON.stringify(_data)),
+	    success: function(obj){
+	    	
+	    	var responseData = obj.data.ch_info;
+	    	
+	    	searchInfo.bday = responseData.bday; 
+	    	
+	    	// 서신 첨부 파일 목록
+	    	searchInfo["letr_atch_file_list"] = responseData.letr_atch_file_list;
+	    	
+			searchInfo.drop_rcp_no = responseData.drop_rcp_no;
+	    	
+	    	if(responseData.drop_rcp_no === ""){
+	    		$(".unable_status").remove();
+	    	}
+	    	else{
+	    		$("#drop_rnnm").text(responseData.drop_rnnm);
+	    	}
+
+	    	$('#dnctr_cd_nm').text(responseData.dnctr_cd_nm);
+
+	    	$('#ch_enm').text(responseData.ch_enm);
+	    	$('#cdp_cd').text(responseData.cdp_cd); 
+	    	$('#gndr').text(responseData.gndr === "M" ? "Male" : "Female");
+	    	$('#bday').text(responseData.bday);
+	    	$('#age').text(responseData.age);
+	    	$('#sctp_cd_nm').text(responseData.sctp_cd_nm);
+	    	$('#schl_nm').text(responseData.schl_nm);
+	    	$('#grad').text(responseData.grad);
+	    	$('#letr_relmem_nm').text(responseData.letr_relmem_nm);
+	    	$('#letr_tran_adct').text(responseData.letr_tran_adct);
+	    	$('#letr_enclo_artcl').text(responseData.letr_enclo_artcl);
+	    	
+	    	// 아빠, 엄마, 형제, 자매 동거여부
+	    	searchInfo.fa_ltyn = responseData.fa_ltyn;
+	    	searchInfo.mo_ltyn = responseData.mo_ltyn;
+	    	searchInfo.ebro_ltyn = responseData.ebro_ltyn;
+	    	searchInfo.esis_ltyn = responseData.esis_ltyn;
+
+	    	// 이미지 등록, 수정할 때 URL에 사용
+	    	searchInfo.cdp_cd = responseData.cdp_cd;
+	    	
+	    }
+	});
+	
+	//다국어 처리
+	changeLang(localStorage.getItem('lang'));
+	
+	// Valid Check
+	$.each($('.valid_check'), function() {
+		if($(this).attr("name") == 'bth_day') {
+			$(this).attr("data-valid-title", $(this).parent().parent().prev().text());
+		}
+		else {
+			$(this).attr("data-valid-title", $(this).parent().prev().children().eq("1").text());
+		}
+	});
+	
+	$.each($('._valid_check'), function() {
+		$(this).attr("data-valid-title", $(this).parent().parent().prev().children().eq("1").text());
+	});
+	
+	$.each($('.valid_check_eq'), function() {
+		$(this).attr("data-valid-title", $(this).parent().prevAll("label").children().eq("1").text());
+	});
+	
+	// CDP일 경우 Translation 필수값 해제
+	if(localStorage.auth_cd === "330004"){
+		// 필수값 해제
+		$("#chrpl_eng").removeAttr("data-valid-use");
+	}
+};
+
+/* ============================================================================================
+/* 페이지 셋업 (Don't remove!!!)
+/* --------------------------------------------------------------------------------------------
+/* 기본 페이지 사용 컴포넌트 호출 및 초기화 작업 진행 
+/* ============================================================================================ */
+pageSetUp();
+
+/* ============================================================================================
+/* 페이지 정보 설정 로드
+/* --------------------------------------------------------------------------------------------
+/* 컴포넌트 SCRIPT 파일 로드 및 페이지 정보 설정 SCRIPT 로드
+/* ============================================================================================ */
+pagefunction();
+</script></div>
+
+</div>
+		<!-- END #MAIN CONTENT -->
+	</div>
+	<!-- END #MAIN PANEL -->
+
+	<!-- #PAGE FOOTER -->
+	<!-- 
+	<div class="page-footer" style="bottom:-30px;">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 ta-r">
+				<span class="txt-color-white">GOOD NEIGHBORS<span class="hidden-xs"> - Copyright </span>© 2018 <span class="hidden-xs">All rights reserved.</span> </span>
+			</div>
+		</div>
+	</div>
+	-->
+	<!-- END FOOTER -->
+
+	<!--================================================== -->
+	
+	<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
+	<script data-pace-options='{ "restartOnRequestAfter": true }' src="js/plugin/pace/pace.min.js"></script>-->
+	
+	
+
+	<script type="text/javascript">
+	
+	$('#loginName').text(localStorage.login_nm);
+	$('#loginLevel').text(localStorage.ctr_nm+' '+localStorage.auth_nm);
+	
+	// Set Country Image
+	if(localStorage.auth_cd != "330002"){
+		$("#country_image").attr("src", "/resources/img/country/" + localStorage.ctr_cd + ".png");
+	}
+		
+
+	function goLogout() {
+    	$.ajax({
+		    url: api_url + '/bo/login/api-200-0002',
+		    type: 'POST', // GET or POST
+		    async: true,
+		    cache: false,
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: '{}',
+		    success: function(obj){
+		    	localStorage.clear();
+		    	location.href = '/html/application/login.html';
+		    },
+		    error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+	    		alert(cf_msg(serverObj.message));
+		    	return;
+		    }
+		});
+	}
+	
+	/** 공지사항 목록 화면 이동 */
+	function f_main() {
+		f_openMenu('/html/application/dashboard.html', '');
+	}
+	
+	$.root_ = $('body');
+	</script>
+
+<div id="divSmallBoxes"></div><div id="divMiniIcons"></div><div id="divbigBoxes"></div><script type="text/javascript" src="./GML_files/grid.locale-en.min.js.download"></script><script type="text/javascript" src="./GML_files/jquery.jqGrid.min.js.download"></script><div id="monthpicker_01270044884393972" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" style="position: absolute; z-index: 999999; white-space: nowrap; width: 250px; overflow: hidden; text-align: center; top: 237.125px; left: 343.271px; display: none;"><div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all mtz-monthpicker"><select class="mtz-monthpicker mtz-monthpicker-year"><option class="mtz-monthpicker" value="2012">2012</option><option class="mtz-monthpicker" value="2013">2013</option><option class="mtz-monthpicker" value="2014">2014</option><option class="mtz-monthpicker" value="2015">2015</option><option class="mtz-monthpicker" value="2016">2016</option><option class="mtz-monthpicker" value="2017">2017</option><option class="mtz-monthpicker" value="2018">2018</option><option class="mtz-monthpicker" value="2019">2019</option><option class="mtz-monthpicker" value="2020">2020</option><option class="mtz-monthpicker" value="2021">2021</option><option class="mtz-monthpicker" value="2022" selected="selected">2022</option><option class="mtz-monthpicker" value="2023">2023</option><option class="mtz-monthpicker" value="2024">2024</option><option class="mtz-monthpicker" value="2025">2025</option><option class="mtz-monthpicker" value="2026">2026</option><option class="mtz-monthpicker" value="2027">2027</option><option class="mtz-monthpicker" value="2028">2028</option><option class="mtz-monthpicker" value="2029">2029</option><option class="mtz-monthpicker" value="2030">2030</option><option class="mtz-monthpicker" value="2031">2031</option><option class="mtz-monthpicker" value="2032">2032</option></select></div><table class="mtz-monthpicker"><tbody class="mtz-monthpicker"><tr class="mtz-monthpicker"><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="1">Jan</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="2">Feb</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="3">Mar</td></tr><tr class="mtz-monthpicker"><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="4">Apr</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="5">May</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="6">Jun</td></tr><tr class="mtz-monthpicker"><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="7">Jul</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="8">Aug</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month ui-state-active" style="padding:5px;cursor:default;" data-month="9">Sep</td></tr><tr class="mtz-monthpicker"><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="10">Oct</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="11">Nov</td><td class="ui-state-default mtz-monthpicker mtz-monthpicker-month" style="padding:5px;cursor:default;" data-month="12">Dec</td></tr></tbody></table></div><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><div class="ui-widget ui-widget-content ui-corner-all ui-jqdialog" id="alertmod_gml_grid" dir="ltr" tabindex="-1" role="dialog" aria-labelledby="alerthd_gml_grid" aria-hidden="true" style="width: 200px; height: auto; z-index: 950; overflow: hidden; top: 259.5px; left: 540px;"><div class="ui-jqdialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix" id="alerthd_gml_grid" style="cursor: move;"><span class="ui-jqdialog-title" style="float: left;">Warning</span><a class="ui-jqdialog-titlebar-close ui-corner-all" style="right: 0.3em;"><span class="ui-icon ui-icon-closethick"></span></a></div><div class="ui-jqdialog-content ui-widget-content" id="alertcnt_gml_grid"><div>Please, select row</div><span tabindex="0"><span tabindex="-1" id="jqg_alrt"></span></span></div><div class="jqResize ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se"></div></div><div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons" tabindex="-1" role="dialog" aria-describedby="multiImagePopup" aria-labelledby="ui-id-2" style="height: auto; width: 900px; top: 0px; left: 181.5px; display: none;"><div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-2" class="ui-dialog-title"><div class="widget-header"><h6><i class="fa fa-file-photo-o"></i> Letter</h6></div></span><button class="ui-dialog-titlebar-close"></button></div><div id="multiImagePopup" style="width: auto; min-height: 492px; max-height: none; height: auto;" class="ui-dialog-content ui-widget-content"><div id="popContent">
+	<div class="widget-body">
+		<!-- 이미지 슬라이드 시작 -->
+		<div class="form-group">
+			<div id="multiCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+				<ol class="carousel-indicators">
+				<li data-target="#multiCarousel" data-slide-to="0" class="active"></li></ol>
+				<div class="carousel-inner" role="listbox">
+				<div class="item active"><img src="./GML_files/L202209_1505018_1637993176975_20220917103750_1.jpg" alt="data.ch_nm_0" onerror="this.src=&quot;/resources/img/noImage.png&quot;"></div></div>
+				<a class="left carousel-control" href="http://mychild.goodneighbors.org/html/application/index.html#multiCarousel" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a> <a class="right carousel-control" href="http://mychild.goodneighbors.org/html/application/index.html#multiCarousel" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+		<!-- 이미지 슬라이드 끝 -->
+	</div>
+</div>
+
+<script type="text/javascript">
+
+/* ============================================================================================
+/* 페이지 정보 설정
+/* --------------------------------------------------------------------------------------------
+/* 초기 설정 및 필요 UI 컴포넌트 셋팅
+/* ============================================================================================ */
+var imagePopPagefunction = function() {
+	
+	// 이미지 URL 목록
+	var imageUrlList = searchInfo.multiPopup_img;
+	
+	if(imageUrlList.length < 1){
+		
+		var $list_li  = $('<li></li>').attr({"data-target":"#multiCarousel", "data-slide-to": 0});
+		var $item_div = $('<div></div>').addClass('item');
+		var $img      = $('<img/>');
+		
+		$img.attr('src', "/resources/img/noImage.png");
+		
+		$item_div.addClass('active');
+		$list_li.addClass('active');
+		
+		$item_div.append($img);
+
+    	$("#multiCarousel").find(".carousel-indicators").append($list_li);
+    	$("#multiCarousel").find(".carousel-inner").append($item_div);
+		
+	}
+	
+	$.each(imageUrlList, function(idx, item) {
+		
+		var $list_li  = $('<li></li>').attr({"data-target":"#multiCarousel", "data-slide-to": idx});
+		var $item_div = $('<div></div>').addClass('item');
+		var $img      = $('<img/>');
+		
+		$img.attr('src', s3_img_url + item)
+			.attr('alt', 'data.ch_nm_' + idx)
+			.attr('onerror', 'this.src="/resources/img/noImage.png"');
+		
+		if(idx == (imageUrlList.length-1)) {
+			$item_div.addClass('active');
+			$list_li.addClass('active');
+		}
+		
+		$item_div.append($img);
+
+    	$("#multiCarousel").find(".carousel-indicators").append($list_li);
+    	$("#multiCarousel").find(".carousel-inner").append($item_div);
+	})
+
+ };
+
+ /* ============================================================================================
+ /* 페이지 셋업 (Don't remove!!!)
+ /* --------------------------------------------------------------------------------------------
+ /* 기본 페이지 사용 컴포넌트 호출 및 초기화 작업 진행 
+ /* ============================================================================================ */
+ pageSetUp();
+
+ /* ============================================================================================
+ /* 페이지 정보 설정 로드
+ /* --------------------------------------------------------------------------------------------
+ /* 컴포넌트 SCRIPT 파일 로드 및 페이지 정보 설정 SCRIPT 로드
+ /* ============================================================================================ */
+ imagePopPagefunction();
+ 
+</script></div><div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><div class="ui-dialog-buttonset"><button type="button" class="btn btn-default"><i class="fa fa-times"></i>&nbsp; Cancel</button></div></div></div></body></html>

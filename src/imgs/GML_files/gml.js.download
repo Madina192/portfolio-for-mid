@@ -1,0 +1,3989 @@
+/**
+ * ==================================================================================
+ * GM : 이미지 파일 상수
+ * ==================================================================================
+ */
+/*var GM_IMG_CONFIG = {
+	'SERVICE' : 'CIF_',
+	'CHILD' : '',
+	'BLOB' : 'TH_',
+	'CERTIFICATION' : 'CE_',
+	'CONSENT' : 'CO_' 
+}*/
+
+/**
+ * ==================================================================================
+ * Letter : 이미지 파일 상수
+ * ==================================================================================
+ */
+var GML_IMG_CONFIG = {
+	'SERVICE' : 'GML_'
+}
+
+/**
+ * ==================================================================================
+ * Ajax 중복처리방지를 위한 변수
+ * ==================================================================================
+ */
+var isAjaxing = false;
+
+/**
+ * ==================================================================================
+ * gml 리스트 화면 가기
+ * ==================================================================================
+ */
+function go_gmlLN() {
+	if($('body').has('style', 'padding-right')){
+		$('body').removeAttr('style', 'padding-right');
+	}
+	
+	// 좌측 메뉴 탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+		$('html').removeClass("hidden-menu-mobile-lock"); 
+		$("body").removeClass("hidden-menu");
+	}
+	
+	searchInfo.rcp_no = "";
+	searchInfo.rcp_no_list = "";
+	searchInfo.rpt_stcd = "";
+	
+	var url = "/html/application/service/gml/gmlLN.html";
+	var method = "GET";
+	cf_action(url, method);
+}
+
+/**
+ * ==================================================================================
+ * gm 등록 화면 가기
+ * ==================================================================================
+ */
+function go_gmlWN(gml) {
+	// 좌측 메뉴탭 지우기
+	if(!$('html').hasClass("hidden-menu-mobile-lock") && !$("body").hasClass("hidden-menu")){
+	    $('html').addClass("hidden-menu-mobile-lock"); 
+	    $("body").addClass("hidden-menu");
+	}
+	
+	var url;
+	if(gml === "GM"){
+		url = "/html/application/service/gml/gmWN.html";
+	} else if(gml === "L"){
+		url = "/html/application/service/gml/letterWN.html";
+	} else if(gml === "C"){
+		url = "/html/application/service/gml/cardWN.html";
+	}
+
+	var method = "GET";
+	cf_action(url, method);
+}
+
+
+/**
+ * ==================================================================================
+ * gm 상세 화면 가기
+ * ==================================================================================
+ */
+function go_gmlRN(gml) {
+	var url;
+	if(gml === "GM"){
+		url = "/html/application/service/gml/gmRN.html";
+	} else if(gml === "L"){
+		url = "/html/application/service/gml/letterRN.html";
+	} else if(gml === "C"){
+		url = "/html/application/service/gml/cardRN.html";
+	}
+
+	var method = "GET";
+	cf_action(url, method);
+}
+
+
+/**
+ * ==================================================================================
+ * gm 수정 화면 가기
+ * ==================================================================================
+ */
+function go_gmlEN(gml) {
+	var url;
+
+	if(gml === "GM"){
+		url = "/html/application/service/gml/gmEN.html";
+	} else if(gml === "L"){
+		url = "/html/application/service/gml/letterEN.html";
+	} else if(gml === "C"){
+		url = "/html/application/service/gml/cardEN.html";
+	}
+	
+	// 좌측 메뉴탭 지우기
+	if(!$('html').hasClass("hidden-menu-mobile-lock") && !$("body").hasClass("hidden-menu")){
+	    $('html').addClass("hidden-menu-mobile-lock"); 
+	    $("body").addClass("hidden-menu");
+	}
+
+	var method = "GET";
+	cf_action(url, method);
+}
+
+/**
+ * ==================================================================================
+ * gm 스크리닝 화면 가기
+ * ==================================================================================
+ */
+function go_gmSN(gml) {
+	var url;
+	var selectionError = false;
+
+	if(gml === "GM"){
+		url = "/html/application/service/gml/gmSN.html";
+	} else if(gml === "L"){
+		url = "/html/application/service/gml/letterSN.html";
+	} else if(gml === "C"){
+		url = "/html/application/service/gml/cardSN.html";
+	} else if(gml === undefined){
+		// GM/L을 선택해주세요.
+		alert($.local_lang.alert_msg.select_gml);
+		return false;
+	}
+	
+	if(localStorage.auth_cd === "330004" || localStorage.auth_cd === "330002"){
+		// 해당권한이 없습니다.
+		alert($.local_lang.alert_msg.not_screening);
+   		return false; 
+	}
+
+	var rcp_no = searchInfo.rcp_no;
+	
+	searchInfo["rcp_no_list"] = [];
+	searchInfo["rcp_dt_list"] = [];
+	
+	if(rcp_no){
+		searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+	} else {
+		$.each(jQuery("#gml_grid").find('input[role=checkbox]:checked'), function() {
+			var id = $(this).parents("tr").attr("id");
+			
+			var rowObject = $("#gml_grid").getRowData(id);      //체크된 id의 row 데이터 정보를 Object 형태로 반환
+	       	var screening_list = ["14","2"];
+	        
+	        if(localStorage.auth_cd === "330003" && (screening_list.indexOf(rowObject.rpt_stcd) >= 0)){
+		 		searchInfo["rcp_no_list"].push(rowObject.rcp_no);
+		 		searchInfo["rcp_dt_list"].push(rowObject.rcp_dt);
+	        }
+	        
+	        // GM/L 구분하여 잘못 선택된 아동이 있을 경우 팝업 호출
+			if(rowObject.gml_cate != gml){
+				selectionError = true;
+			}
+		});
+	}
+	
+	// GM/L 구분하여 잘못 선택된 아동이 있을 경우 팝업 호출
+	if(selectionError){
+		// Search Area에 있는 GM/L에서 선택한 항목과 스크리닝시 선택된 아동의 GM, Letter를 구분해주세요.
+		alert($.local_lang.alert_msg.gml_list_sortation);
+		return;
+	}
+
+   	if(searchInfo["rcp_no_list"].length <= 0){
+   		// 스크리닝할 데이터가 없습니다.
+   		alert($.local_lang.alert_msg.not_data_to_screening);
+   		return false; 
+   	}
+   	
+	var method = "GET";
+	cf_action(url, method);
+}
+
+/**
+ * ==================================================================================
+ * GM: 수정/스크리닝에서 스크리닝 화면 가기
+ * ==================================================================================
+ */
+function back_gmSN() {
+	// 좌측 메뉴 탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+		$('html').removeClass("hidden-menu-mobile-lock"); 
+		$("body").removeClass("hidden-menu");
+	}
+	
+	var url = "/html/application/service/gml/gmSN.html";
+	var method = "GET";
+	cf_action(url, method);
+}
+
+/**
+ * ==================================================================================
+ * Letter: 수정/스크리닝에서 스크리닝 화면 가기
+ * ==================================================================================
+ */
+function back_letterSN() {
+	// 좌측 메뉴 탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+		$('html').removeClass("hidden-menu-mobile-lock"); 
+		$("body").removeClass("hidden-menu");
+	}
+	
+	var url = "/html/application/service/gml/letterSN.html";
+	var method = "GET";
+	cf_action(url, method);
+}
+
+/**
+ * ==================================================================================
+ * Card: 수정/스크리닝에서 스크리닝 화면 가기
+ * ==================================================================================
+ */
+function back_cardSN() {
+	// 좌측 메뉴 탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+		$('html').removeClass("hidden-menu-mobile-lock"); 
+		$("body").removeClass("hidden-menu");
+	}
+	
+	var url = "/html/application/service/gml/cardSN.html";
+	var method = "GET";
+	cf_action(url, method);
+}
+
+
+/**
+ * ==================================================================================
+ * GM : 스크리닝 이전 다음 버튼 클릭
+ * ==================================================================================
+ */
+function f_gmScreenMove(option){
+	
+	$("#image_label").css('background-color','white');
+	$("#translation_label").css('background-color','white');
+	$("#substituted_label").css('background-color','white');
+	$("#relationship_label").css('background-color','white');
+	$("#reason_label").css('background-color','white');
+	$("#gift_list_label").css('background-color','white');
+	
+	var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+	var rcp_dt_index = $.inArray(searchInfo["rcp_dt"] , searchInfo["rcp_dt_list"]);
+		
+	if(option == 0){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index-1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index-1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_next').show();
+		
+		if(new_arr_index <= 0){
+			$('#btn_prev').hide();
+		}
+	
+	} else if(option == 1){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index+1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index+1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_prev').show();
+		
+		if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+			$('#btn_next').hide();
+		}
+	}
+	
+	// 좌측 메뉴탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+	    $('html').removeClass("hidden-menu-mobile-lock"); 
+	    $("body").removeClass("hidden-menu");
+	}
+	
+	f_gmInfo();
+	$('html').scrollTop(0);
+
+}
+
+/**
+ * ==================================================================================
+ * Letter : 스크리닝 이전 다음 버튼 클릭
+ * ==================================================================================
+ */
+function f_letterScreenMove(option){
+	
+	$("#image_label").css('background-color','white');
+	$("#translation_label").css('background-color','white');
+	$("#substituted_label").css('background-color','white');
+	$("#relationship_label").css('background-color','white');
+	$("#reason_label").css('background-color','white');
+	$("#gift_list_label").css('background-color','white');
+	
+	var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+	var rcp_dt_index = $.inArray(searchInfo["rcp_dt"] , searchInfo["rcp_dt_list"]);
+		
+	if(option == 0){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index-1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index-1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_next').show();
+		
+		if(new_arr_index <= 0){
+			$('#btn_prev').hide();
+		}
+	
+	} else if(option == 1){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index+1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index+1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_prev').show();
+		
+		if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+			$('#btn_next').hide();
+		}
+	}
+	
+	// 좌측 메뉴탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+	    $('html').removeClass("hidden-menu-mobile-lock"); 
+	    $("body").removeClass("hidden-menu");
+	}
+	
+	f_letterInfo();
+	$('html').scrollTop(0);
+
+}
+
+/**
+ * ==================================================================================
+ * Letter : 스크리닝 이전 다음 버튼 클릭
+ * ==================================================================================
+ */
+function f_cardScreenMove(option){
+	
+	$("#image_label").css('background-color','white');
+	
+	
+	var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+	var rcp_dt_index = $.inArray(searchInfo["rcp_dt"] , searchInfo["rcp_dt_list"]);
+		
+	if(option == 0){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index-1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index-1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_next').show();
+		
+		if(new_arr_index <= 0){
+			$('#btn_prev').hide();
+		}
+	
+	} else if(option == 1){
+		
+		searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index+1];
+		searchInfo["rcp_dt"] = searchInfo["rcp_dt_list"][rcp_dt_index+1];
+		var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+		
+		$('#btn_prev').show();
+		
+		if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+			$('#btn_next').hide();
+		}
+	}
+	
+	// 좌측 메뉴탭 표시
+	if($('html').hasClass("hidden-menu-mobile-lock") && $("body").hasClass("hidden-menu")){
+	    $('html').removeClass("hidden-menu-mobile-lock"); 
+	    $("body").removeClass("hidden-menu");
+	}
+	
+	f_cardInfo();
+	$('html').scrollTop(0);
+
+}
+
+
+/**
+ * ==================================================================================
+ * 이미지 팝업 호출
+ * ==================================================================================
+ */
+function f_openImageRD(option){
+	
+	if(searchInfo["letr_atch_file_list"] == "") {
+		// 이미지가 없습니다.
+		alert($.local_lang.alert_msg.no_image);
+		return false;
+	}
+	
+	var _file_path = letr_atch_file_list.file_path;
+	var _file_nm = letr_atch_file_list.file_nm;
+	
+	searchInfo["popup_img"] = s3_img_url + _file_path + '/' + _file_nm;
+	
+	if(!searchInfo["popup_img"]){
+		// 이미지가 없습니다.
+		alert($.local_lang.alert_msg.no_image);
+		return false;
+	}
+
+	$.ajax({
+		url: '/html/application/common/imagePopup.html',
+		type: 'GET',
+		cache: false,
+		success: function(data) {
+			var $target = $('#imageRD');
+			$target.html(data);
+		},
+	    error: function(obj) {
+	    	var serverObj = obj.responseJSON;
+    		alert(cf_msg(serverObj.message));
+	    	return;
+	    }
+	});
+	$('#imageRD').dialog('open');
+}
+
+/**
+ * ==================================================================================
+ * 팝업 화면 : 이미지 호출(이미지 수만큼)
+ * ==================================================================================
+ */
+function go_imageMultiplePopup() {
+	
+	var _list = []
+	
+	$.each(searchInfo.letr_atch_file_list, function(i, item){
+		_list.push(item.file_path + "/" + item.file_nm)
+	});
+	
+	// 슬라이드 이미지 팝업 롤링을 위해 임시 저장
+	searchInfo.multiPopup_img = _list;
+	
+	$.ajax({
+		url: '/html/application/common/multipleImagePopup.html',
+		type: 'GET',
+		async: true,
+		cache: false,
+		success: function(data) {
+			var $target = $('#multiImagePopup');
+			$target.html(data);
+		}
+	});
+	
+	$('#multiImagePopup').dialog('open');
+}
+
+/**
+ * ==================================================================================
+ * GM 상세조회
+ * ==================================================================================
+ */
+ function f_gmInfo(){
+	 
+	$(".btn-warning").hide();
+	$("#btn_search").hide();
+	
+	 
+	$("#year_title").text(searchInfo.rcp_dt);
+	 
+	$('#imgWithCaseMark').empty();
+	 
+	$('#rtrn_bcd_01').val('');
+	$('#rtrn_bcd_02').val('');
+	$('#rtrn_scd_01').val('');
+	$('#rtrn_scd_02').val('');
+	$('#rtrn_detl_01').val('');
+	$('#rtrn_detl_02').val('');
+	$('#rtrn_scd_01').attr('disabled', true);
+	$('#rtrn_scd_02').attr('disabled', true);
+	$('#rtrn_detl_01').attr('readonly', true);
+	$('#rtrn_detl_02').attr('readonly', true);
+	
+	$('#giftList').find('.nav-tabs').empty();
+	$('#giftList').find('.tab-content').empty();
+	
+	$("#myCarousel").find(".carousel-indicators").empty();
+	$("#myCarousel").find(".carousel-inner").empty();
+	
+	if(searchInfo.rcp_no == undefined){
+		// 데이터가 올바르지 않습니다.(아동접수번호)
+		alert($.local_lang.alert_msg.data_is_incorrect);
+		go_gmlLN();
+		return false;
+	}
+	
+	f_selectGiftList("246").always(function(){
+		var _data = {};
+	
+		_data["rcp_no"] = searchInfo.rcp_no;
+	
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0401',
+		    type: 'GET', 
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: encodeURI("params="+JSON.stringify(_data)),
+		    success: function(obj){
+		    	
+		    	var responseData = obj.data.gift_money_info;
+		    	var return_list = obj.data.return_list;
+		    	
+		    	searchInfo.rpt_stcd = responseData.rpt_stcd;
+		    	
+		    	if(responseData.drop_rcp_no === ""){
+		    		$(".unable_status").remove();
+		    	}
+		    	
+		    	$("#drop_rnnm").text(responseData.drop_rnnm);
+		    	if(responseData.unable_reg_yn === "Y"){
+		    		$("#unable_reg_yn").attr({"checked" : true, "disabled" : true});
+		    	}
+		    	else{
+		    		$("#unable_reg_yn").attr({"checked" : false, "disabled" : true});
+		    	}
+		    	
+		    	$('#return_list').empty();
+		    	//리턴사유 노출 유무
+		    	//CDP일 경우
+		    	if(localStorage.auth_cd === "330004"){
+		    		if(["15"].indexOf(searchInfo.rpt_stcd) > -1 ){	// R(HO)
+		    			$("#return_reason").show();
+		    			f_checkReturn(return_list);
+		    		}else{
+		    			$("#return_reason").hide();
+		    		}
+		    	//HO 일 경우
+		    	} else if(localStorage.auth_cd === "330003"){
+		    		if(["2"].indexOf(searchInfo.rpt_stcd) > -1){	// TR
+		    			$("#return_reason").show();
+		    			f_checkReturn(return_list);
+		    		}else{
+		    			$("#return_reason").hide();
+		    		}
+		    	}
+		    	
+		    	// 리턴사유에 해당하는 영역 붉은색으로 표시
+		    	if(["15"].indexOf(searchInfo.rpt_stcd) > -1 || ["2"].indexOf(searchInfo.rpt_stcd) > -1){	// R(HO)/TR
+					f_gml_return_check(return_list);
+		    	}
+	
+		    	$('#dnctr_cd_nm').text(responseData.dnctr_cd_nm);
+		    	
+		    	// 이미지, 동영상
+		    	if(responseData.atch_file_list.length > 0) {
+				    $.each(responseData.atch_file_list, function(i, item) {
+				    	var _filename = item.file_nm; // 파일 이름
+				    	var _fileExt = _filename.substring(_filename.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			    		var extList = [".mp4", ".avi"]; // 가능한 확장자 리스트
+			    		
+			    		// 파일이 동영상일 경우
+				    	if($.inArray(_fileExt, extList) > -1){
+						    var carousel_li  = $('<li/>').attr({"data-target":"#myCarousel","data-slide-to": i});
+					    	var carousel_item_div  = $('<div/>').addClass("item");
+					    	var carousel_video  = $('<video controls loop/>').addClass("col-md-12");
+					    	var carousel_video_source = $('<source/>').attr({"src" : s3_img_url + item.file_path + '/' + item.file_nm});
+					    	
+					    	carousel_video.append(carousel_video_source);
+					    	carousel_item_div.append(carousel_video);
+					    	
+					    	$("#myCarousel").find(".carousel-indicators").append(carousel_li);
+					    	$("#myCarousel").find(".carousel-inner").append(carousel_item_div);
+					    	
+					    // 파일이 이미지일 경우
+				    	}else{
+					    	var carousel_li  = $('<li/>').attr({"data-target":"#myCarousel","data-slide-to": i});
+					    	var carousel_item_div  = $('<div/>').addClass("item");
+					    	var carousel_img  = $('<img/>').attr("src", s3_img_url + item.file_path + '/' + item.file_nm);
+					    	
+					    	if(i == 0){
+					    		carousel_li.addClass('active');
+					    		carousel_item_div.addClass('active');
+					    	}
+		
+					    	carousel_item_div.append(carousel_img);
+		
+					    	$("#myCarousel").find(".carousel-indicators").append(carousel_li);
+					    	$("#myCarousel").find(".carousel-inner").append(carousel_item_div);
+				    	}
+				    	
+				    });
+		    	}
+		    	else {
+					var $imgDiv = $('<div/>', {'class' : 'form-group'});
+	    			var $img    = $('<img/>', {'class' : 'col-sm-offset-1 col-md-offset-1 col-xs-12 col-sm-10 col-md-10', 'src' : '/resources/img/noImage.png'});
+	    			
+	    			$("#myCarousel").before($imgDiv.append($img));
+	    			$("#myCarousel").remove();
+		    	}
+	
+		    	$('#ch_enm').text(responseData.ch_enm);
+		    	$('#cdp_cd').text(responseData.cdp_cd); 
+		    	$('#gndr').text(responseData.gndr === "M" ? "Male" : "Female");
+		    	$('#bday').text(responseData.bday);
+		    	$('#age').text(responseData.age);
+		    	$('#sctp_cd_nm').text(responseData.sctp_cd_nm);
+		    	$('#schl_nm').text(responseData.schl_nm);
+		    	$('#grad').text(responseData.grad);
+		    	$('#gmny_gift_damt').text(responseData.gmny_gift_damt);
+		    	$('#gmny_mbsh_req').text(responseData.gmny_mbsh_req);
+		    			    	
+		    	var _total_damt = 0;
+	
+		    	$.each(responseData.gift_list, function(i, item) {
+		    		var _tr = $('#giftList').find('div[data-bcd='+item.gift_bcd+']').find('tr[data-scd='+item.gift_scd+']');
+		    		_tr.children().eq(1).text(item.gift_num);
+		    		_tr.children().eq(2).text(item.gift_damt);
+		    		_tr.children().eq(3).text(item.gift_num * item.gift_damt);
+		    		
+		    		// 탭 체크 마크 표시
+		    		var _tab_id = $(_tr).parents('.tab-pane').attr('id');
+		    		if($(_tr).children().eq(1).text() != ""){
+		    			$('#giftList').find('a[href="#'+_tab_id+'"]').append("&ensp;<i class='fa fa-check-square'/>");
+		    		}
+	
+		    		_total_damt += item.gift_num * item.gift_damt;
+		    	});
+	
+		    	$('#_total_damt').text(_total_damt);
+	
+		    	$('#remrk_eng').text(responseData.remrk_eng);
+		    	
+		    	// 이미지 좌상단 케이스 마크 표시 
+				createCaseMark('imgWithCaseMark', responseData.spsl_info, 'GML');
+		    	
+		    	//다국어 처리
+		    	changeLang(localStorage.getItem('lang'));
+		    			    	
+		    	$(".btn-warning").show();
+		    	$("#btn_search").show();		    	
+		    	
+		    }, 
+		    error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+	    		alert(cf_msg(serverObj.message));
+		    	return;
+		    }
+		});
+	});
+}
+ 
+ /**
+  * ==================================================================================
+  * letter 상세조회
+  * ==================================================================================
+  */
+function f_letterInfo(){
+	
+	$(".btn").hide();
+	
+	$("#year_title").text(searchInfo.rcp_dt);
+	
+	$('#rtrn_bcd_01').val('');
+	$('#rtrn_bcd_02').val('');
+	$('#rtrn_scd_01').val('');
+	$('#rtrn_scd_02').val('');
+	$('#rtrn_detl_01').val('');
+	$('#rtrn_detl_02').val('');
+	$('#rtrn_scd_01').attr('disabled', true);
+	$('#rtrn_scd_02').attr('disabled', true);
+	$('#rtrn_detl_01').attr('readonly', true);
+	$('#rtrn_detl_02').attr('readonly', true);
+	
+	$("#myCarousel").find(".carousel-indicators").empty();
+	$("#myCarousel").find(".carousel-inner").empty();
+	
+	if(searchInfo.rcp_no == undefined){
+		// 데이터가 올바르지 않습니다.(아동접수번호)
+		alert($.local_lang.alert_msg.data_is_incorrect);
+		go_gmlLN();
+		return false;
+	}
+	
+	var _data = {};
+
+	_data["rcp_no"] = searchInfo.rcp_no;
+
+	$.ajax({
+	    url: api_url + '/bo/report/gml/api-204-0402',
+	    type: 'GET', 
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: encodeURI("params="+JSON.stringify(_data)),
+	    success: function(obj){
+	    	
+	    	var responseData = obj.data.letter_info;
+	    	var return_list = obj.data.return_list;
+	    	
+	    	searchInfo.rpt_stcd = responseData.rpt_stcd; 
+	    	
+	    	//리턴사유 노출 유무
+	    	//CDP일 경우
+	    	if(localStorage.auth_cd === "330004"){
+	    		if(["15"].indexOf(searchInfo.rpt_stcd) > -1 ){	// R(HO)
+	    			$("#return_reason").show();
+				 	// 리턴된 수정사항인지 아닌지를 구분하여 페이지 SET
+	    			f_checkReturn(return_list);
+	    		}else{
+	    			$("#return_reason").hide();
+	    		}
+	    	//HO 일 경우
+	    	} else if(localStorage.auth_cd === "330003"){
+	    		if(["2"].indexOf(searchInfo.rpt_stcd) > -1){	// TR
+	    			$("#return_reason").show();
+				 	// 리턴된 수정사항인지 아닌지를 구분하여 페이지 SET
+	    			f_checkReturn(return_list);
+	    		}else{
+	    			$("#return_reason").hide();
+	    		}
+	    	}
+	    	
+	    	// 리턴사유에 해당하는 영역 붉은색으로 표시
+	    	if(["15"].indexOf(searchInfo.rpt_stcd) > -1 || ["2"].indexOf(searchInfo.rpt_stcd) > -1){	// R(HO)/TR
+				f_gml_return_check(return_list);
+	    	}
+
+	    	// 이미지
+	    	 $.each(responseData.atch_file_list, function(i, item) {
+			    	
+		    	var carousel_li  = $('<li/>').attr({"data-target":"#myCarousel","data-slide-to": i});
+		    	var carousel_item_div  = $('<div/>').addClass("item");
+		    	var carousel_img  = $('<img/>').attr("src", s3_img_url + item.file_path + '/' + item.file_nm);
+		    	
+		    	if(i == 0){
+		    		carousel_li.addClass('active');
+		    		carousel_item_div.addClass('active');
+		    	}
+	
+		    	carousel_item_div.append(carousel_img);
+	
+		    	$("#myCarousel").find(".carousel-indicators").append(carousel_li);
+		    	$("#myCarousel").find(".carousel-inner").append(carousel_item_div);
+		    	
+		    });
+
+	    	// 서신 첨부 파일 목록
+	    	searchInfo['letr_atch_file_list'] = responseData.letr_atch_file_list;
+
+	    	$('#dnctr_cd_nm').text(responseData.dnctr_cd_nm);
+	    	$('#ch_enm').text(responseData.ch_enm);
+	    	$('#cdp_cd').text(responseData.cdp_cd);
+	    	$('#gndr').text(responseData.gndr === "M" ? "Male" : "Female");
+	    	$('#bday').text(responseData.bday);
+	    	$('#age').text(responseData.age);
+	    	$('#sctp_cd_nm').text(responseData.sctp_cd_nm);
+	    	$('#schl_nm').text(responseData.schl_nm);
+	    	$('#grad').text(responseData.grad);
+	    	$('#letr_enclo_artcl').text(responseData.letr_enclo_artcl);
+	    	$('#letr_relmem_nm').text(responseData.letr_relmem_nm);
+	    	$('#letr_tran_adct').text(responseData.letr_tran_adct);
+			$('#chrpl_eng').text(responseData.chrpl_eng);
+			$('#swrtr_rlcd').text(responseData.swrtr_rlcd_nm);
+			$('#swrt_rncd').text(responseData.swrt_rncd_nm);
+			$('#remrk_eng').text(responseData.remrk_eng);
+			
+			// Y/N 체크
+			substitutedCheck(responseData)
+			
+			$(".btn").show();
+	    }
+	});
+ }
+
+/**
+ * ==================================================================================
+ * card 상세조회
+ * ==================================================================================
+ */
+function f_cardInfo(){
+	
+	$(".btn").hide();
+	
+	$("#year_title").text(searchInfo.rcp_dt);
+	
+	$('#rtrn_bcd_01').val('');
+	$('#rtrn_bcd_02').val('');
+	$('#rtrn_scd_01').val('');
+	$('#rtrn_scd_02').val('');
+	$('#rtrn_detl_01').val('');
+	$('#rtrn_detl_02').val('');
+	$('#rtrn_scd_01').attr('disabled', true);
+	$('#rtrn_scd_02').attr('disabled', true);
+	$('#rtrn_detl_01').attr('readonly', true);
+	$('#rtrn_detl_02').attr('readonly', true);
+	
+	$("#myCarousel").find(".carousel-indicators").empty();
+	$("#myCarousel").find(".carousel-inner").empty();
+	
+	if(searchInfo.rcp_no == undefined){
+		// 데이터가 올바르지 않습니다.(아동접수번호)
+		alert($.local_lang.alert_msg.data_is_incorrect);
+		go_gmlLN();
+		return false;
+	}
+	
+	var _data = {};
+
+	_data["rcp_no"] = searchInfo.rcp_no;
+
+	$.ajax({
+	    url: api_url + '/bo/report/gml/api-204-0410',
+	    type: 'GET', 
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: encodeURI("params="+JSON.stringify(_data)),
+	    success: function(obj){
+	    	
+	    	var responseData = obj.data.letter_info;
+	    	var return_list = obj.data.return_list;
+	    	var responseCard = obj.data.card_list;
+	    	
+	    	searchInfo.rpt_stcd = responseData.rpt_stcd;
+	    	
+	    	//리턴사유 노출 유무
+	    	//CDP일 경우
+	    	if(localStorage.auth_cd === "330004"){
+	    		if(["15"].indexOf(searchInfo.rpt_stcd) > -1 ){	// R(HO)
+	    			$("#return_reason").show();
+				 	// 리턴된 수정사항인지 아닌지를 구분하여 페이지 SET
+	    			f_checkReturn(return_list);
+	    		}else{
+	    			$("#return_reason").hide();
+	    		}
+	    	//HO 일 경우
+	    	} else if(localStorage.auth_cd === "330003"){
+	    		if(["2"].indexOf(searchInfo.rpt_stcd) > -1){	// TR
+	    			$("#return_reason").show();
+				 	// 리턴된 수정사항인지 아닌지를 구분하여 페이지 SET
+	    			f_checkReturn(return_list);
+	    		}else{
+	    			$("#return_reason").hide();
+	    		}
+	    	}
+	    	
+	    	// 리턴사유에 해당하는 영역 붉은색으로 표시
+	    	if(["15"].indexOf(searchInfo.rpt_stcd) > -1 || ["2"].indexOf(searchInfo.rpt_stcd) > -1){	// R(HO)/TR
+				f_gml_return_check(return_list);
+	    	}
+
+	    	// 이미지
+	    	 $.each(responseData.atch_file_list, function(i, item) {
+			    	
+		    	var carousel_li  = $('<li/>').attr({"data-target":"#myCarousel","data-slide-to": i});
+		    	var carousel_item_div  = $('<div/>').addClass("item");
+		    	var carousel_img  = $('<img/>').attr("src", s3_img_url + item.file_path + '/' + item.file_nm);
+		    	
+		    	if(i == 0){
+		    		carousel_li.addClass('active');
+		    		carousel_item_div.addClass('active');
+		    	}
+	
+		    	carousel_item_div.append(carousel_img);
+	
+		    	$("#myCarousel").find(".carousel-indicators").append(carousel_li);
+		    	$("#myCarousel").find(".carousel-inner").append(carousel_item_div);
+		    	
+		    });
+
+	    	// 서신 첨부 파일 목록
+	    	searchInfo['letr_atch_file_list'] = responseData.letr_atch_file_list;
+
+	    	$('#dnctr_cd_nm').text(responseData.dnctr_cd_nm);
+	    	$('#ch_enm').text(responseData.ch_enm);
+	    	$('#cdp_cd').text(responseData.cdp_cd);
+	    	$('#gndr').text(responseData.gndr === "M" ? "Male" : "Female");
+	    	$('#bday').text(responseData.bday);
+	    	$('#age').text(responseData.age);
+	    	$('#sctp_cd_nm').text(responseData.sctp_cd_nm);
+	    	$('#schl_nm').text(responseData.schl_nm);
+	    	$('#grad').text(responseData.grad);
+	    	$('#letr_enclo_artcl').text(responseData.letr_enclo_artcl);
+	    	$('#letr_relmem_nm').text(responseData.letr_relmem_nm);
+	    	$('#letr_tran_adct').text(responseData.letr_tran_adct);
+			//$('#chrpl_eng').text(responseData.chrpl_eng);
+			$('#remrk_eng').text(responseData.remrk_eng);
+			
+			// Card Information
+	    	$.each(responseCard, function(i, item) {			
+				var card_div = $('<div/>').addClass("form-group");
+				var label    = $('<label/>').addClass("col-md-2 control-label cs-css-05").text("*" + item.card_nm);
+				var ans_div  = $('<div/>').addClass("col-md-4");
+				
+				card_div.append(label).append(ans_div);
+				ans_div.append($('<span/>').addClass("form-control cs-css-03").text(item.ans_nm));
+				$('#card_list').prepend(card_div);
+			});
+			
+			$(".btn").show();
+	    }
+	});
+}
+
+/**
+ * ==================================================================================
+ * 리스트 화면 : 검색 이벤트
+ * ==================================================================================
+ */
+function f_search() {
+	
+	var searchData = $("#frmSearch").serializeFormObject();
+	
+	searchData['rcp_dt'] = searchData['rcp_dt'].replaceAll("-", "");
+	
+	// 초기화 버튼 추가
+	f_addButton();
+	
+	// 검색 사용 중으로 변경
+	$("#gml_grid").jqGrid('setGridParam', {search: true});
+	
+	// 첫 페이지 셋팅
+	$("#gml_grid").jqGrid('setGridParam', {page: 1});
+	
+	// setGridParam을 이용해서 postData에 새로 설정해준 postData의 search에 설정 후 그리드를 다시 불러온다.
+	$("#gml_grid").jqGrid('setGridParam', {'postData' : {'search_info':searchData} }).trigger('reloadGrid');	
+}
+
+
+/**
+ * ==================================================================================
+ * 리스트 화면 : 검색 초기화 버튼 추가
+ * ==================================================================================
+ */
+function f_addButton() {
+	// 중복 취소 버튼 생성을 막기위한 기존 버튼 삭제
+	$("#btn_cancel").remove();
+	$("#btn_search").parent().append("<a href=\"javascript:void(0)\" id=\"btn_cancel\" onclick=\"f_cancel();\" class=\"btn btn-danger\"><i class=\"fa fa-retweet\"></i> Clear </a>");
+}
+
+
+/**
+ * ==================================================================================
+ * 리스트 화면 : 검색 초기화 이벤트
+ * ==================================================================================
+ */
+function f_cancel() {
+	// KeepData 폼 안에 input 태그 삭제
+	//$("#frmKeepData").empty();
+	// 검색 초기화 버튼 삭제
+	$("#btn_cancel").remove();
+	 
+	$("#gml_grid").jqGrid('setGridParam', {search: false});
+	$("#gml_grid").jqGrid('setGridParam', {page: 1});
+	
+	// 검색 데이터 초기화 후 그리드 리로드
+	$("#gml_grid").jqGrid('setGridParam', {'postData' : $("#frmSearch").serializeFormObject() }).trigger('reloadGrid');
+	
+	// 검색 폼의 항목들 초기화
+	$("#frmSearch").cleanObject();
+	
+	// CDP
+	f_ajaxProjectCode($('#prj_cd'), commonCode_data);
+	if(localStorage.auth_cd === "330004"){
+		$("#prj_cd").val(localStorage.prj_cd);
+	}
+	
+	// Screening 버튼 초기화
+	$("#btn_screening").attr("href", "javascript:go_gmSN();");
+}
+
+
+/**
+ * ==================================================================================
+ * 목록 화면 : 첨부파일 다운로드
+ * ==================================================================================
+ */
+function f_atchDownload(id) {
+	var url = api_url+"/bo/notice/npmt_bo_02205?";
+	var data = {
+			noti_id: id,
+			access_token: localStorage.getItem('access_token'),
+			access_lang : localStorage.getItem('lang')
+		};
+	var params = encodeURI('params='+JSON.stringify(data));
+	
+	$.fileDownload(url + params);
+}
+
+
+
+/**
+ * ==================================================================================
+ * 팝업 화면 : 수정내역 다이얼로그 호출
+ * ==================================================================================
+ */
+function f_openDataModificationHistoryRD() {
+	$.ajax({
+		url: '/html/application/common/dataModificationHistoryRD.html',
+		type: 'GET',
+		async: true,
+		cache: false,
+		success: function(data) {
+			var $target = $('#dataModificationHistoryRD');
+			$target.html(data);
+		}
+	});
+	
+	$('#dataModificationHistoryRD').dialog('open');
+}
+
+
+ /**
+  * ==================================================================================
+  * 수정화면 || 리턴사유 목록이 있는지 확인
+  * ==================================================================================
+  */
+ function f_checkReturn(return_list){
+	 
+	$("#return_reason_field").empty();
+
+ 	if(return_list.length){
+ 		
+ 		// 보고서 상태
+ 		if(searchInfo.rpt_stcd === '2' || searchInfo.rpt_stcd === '15'){
+ 			
+ 			var j = 1;
+ 			
+ 			$.each(return_list, function(i, item){
+ 				
+ 				var return_reason_div = $('<div/>').addClass("form-group").attr("id", "return_reason_div" + i);
+ 				var return_reason_label = $('<label/>').addClass("col-md-2 control-label cs-css-05").text("Return Reason " + j);
+ 				
+ 				// 리턴사유 대분류 명 영역
+ 				var return_reason_div_bcd = $('<div/>').addClass("col-md-3");
+ 				var return_reason_span_bcd = $('<span/>').addClass("form-control cs-css-03").attr('style','color:red').text(item.rtrn_bcd_nm);
+ 				return_reason_div_bcd.append(return_reason_span_bcd);
+ 				
+ 				// 리턴사유 소분류 명 영역
+ 				var return_reason_div_scd = $('<div/>').addClass("col-md-3");
+ 				var return_reason_span_scd = $('<span/>').addClass("form-control cs-css-03").attr('style','color:red').text(item.rtrn_scd_nm);
+ 				return_reason_div_scd.append(return_reason_span_scd);
+ 				
+ 				// 리턴사유 상세 영역
+ 				var return_reason_div_detl = $('<div/>').addClass("col-md-3");
+ 				var return_reason_span_detl = $('<span/>').addClass("form-control cs-css-03").attr('style','color:red').text(item.rtrn_detl);
+ 				return_reason_div_detl.append(return_reason_span_detl);
+ 				
+ 				return_reason_div.append(return_reason_label).append(return_reason_div_bcd).append(return_reason_div_scd).append(return_reason_div_detl)
+ 				$("#return_reason_field").append(return_reason_div);
+ 				
+ 				$("#return_reason_article").show();
+ 				
+ 				j++;
+ 			});
+ 			
+ 		}
+ 		
+ 	}
+ }
+ 
+ /**
+  * ==================================================================================
+  * 상세/스크리닝 화면에서 사용 Gift list 
+  * ==================================================================================
+  */
+  function f_selectGiftList(grp_cd){
+  	
+  	var deferred = $.Deferred();
+
+  	var _data = {
+ 		"grp_cd_list" : []
+ 	};
+
+ 	_data["grp_cd_list"].push(grp_cd);
+
+ 	$.ajax({
+ 		url: api_url + "/bo/common/code/api-200-0005",
+ 		type: "GET",
+ 		async: false,
+ 		data: encodeURI('params='+JSON.stringify(_data)),
+ 		success: function (resultData) {
+
+ 			if(grp_cd ==="246"){
+ 				
+ 				$.each(resultData.data.cd_list, function(i, item) {
+ 					
+ 					var _gmlist_tab_li = $('<li/>');
+ 					
+ 					
+ 					if(item.chgp_cd == ""){
+						var _gmlist_tab_a = $('<a/>').attr({"data-toggle":"tab","href": "#non"+i}).text(item.cd_enm);
+						var _tabPane_div = $('<div/>').attr({'id':"non"+i,"data-bcd":item.cd}).addClass('tab-pane fade');
+					}
+					else{
+						var _gmlist_tab_a = $('<a/>').attr({"data-toggle":"tab","href": "#"+item.chgp_cd}).text(item.cd_enm);
+	 					var _tabPane_div = $('<div/>').attr({'id':item.chgp_cd,"data-bcd":item.cd}).addClass('tab-pane fade');
+					}
+ 					
+ 					
+ 					_gmlist_tab_li.append(_gmlist_tab_a);
+
+ 					var _tableResponsive_div = $('<div/>').addClass('table-responsive');
+ 					var _table = $('<table/>').addClass('table table-bordered');
+ 					var _thead = $('<thead/>');
+ 					var _tableHeader_tr = $('<tr/>');
+ 					var _tbody = $('<tbody/>');
+
+ 					var _tableHeaderList = ['gml:gift_list','gml:no','gml:unit_price','gml:total_price'];
+ 					
+ 					$.each(_tableHeaderList, function(i, item) {
+
+ 						var _tableHeader_th = $('<th/>').attr('data-i18n',item);
+ 						_tableHeader_tr.append(_tableHeader_th);
+
+ 					});
+
+ 					_thead.append(_tableHeader_tr);
+ 					_table.append(_thead).append(_tbody);
+ 					_tableResponsive_div.append(_table);
+ 					_tabPane_div.append(_tableResponsive_div);
+
+ 					if(i == 0){
+ 						_gmlist_tab_li.addClass('active');
+ 						_tabPane_div.addClass('in active');
+ 					}
+
+ 					$('#giftList').find('.tab-content').append(_tabPane_div);
+ 					
+ 					$('#giftList').find('.nav-tabs').append(_gmlist_tab_li);
+ 					
+ 					f_selectGiftList(item.chgp_cd);
+ 				});
+ 			
+ 			} else {
+ 				$.each(resultData.data.cd_list, function(i, item) {
+ 					
+ 					var _tr = $('<tr/>');
+ 					var _gift_td = $('<td/>').addClass('ta-c va-m').text(item.cd_enm);
+ 					var _td_01 = $('<td/>').addClass('ta-c va-m');
+ 					var _td_02 = $('<td/>').addClass('ta-c va-m');
+ 					var _td_03 = $('<td/>').addClass('ta-c va-m');
+
+ 					_tr.attr('data-scd',item.cd).append(_gift_td).append(_td_01).append(_td_02).append(_td_03);
+
+ 					$('#'+item.grp_cd).find('tbody').append(_tr);
+ 		
+ 				});
+ 			}
+ 		},
+ 		error: function(obj) {
+ 	    	var serverObj = obj.responseJSON;
+ 	    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+ 	    	return;
+ 	    }
+ 	});
+
+ 	return deferred.resolve();
+  }
+
+ /**
+ * ==================================================================================
+ * 등록/수정 화면에서 사용 Gift list 
+ * ==================================================================================
+ */
+ function f_formGiftList(grp_cd){
+
+ 	var _data = {
+		"grp_cd_list" : []
+	};
+	_data["grp_cd_list"].push(grp_cd);
+
+	$.ajax({
+		url: api_url + "/bo/common/code/api-200-0005",
+		type: "GET",
+		async: false,
+		data: encodeURI('params='+JSON.stringify(_data)),
+		success: function (resultData) {
+
+			if(grp_cd ==="246"){
+
+				$.each(resultData.data.cd_list, function(i, item) {
+					
+					var _gmlist_tab_li = $('<li/>');
+					
+					if(item.chgp_cd == ""){
+						var _gmlist_tab_a = $('<a/>').attr({"data-toggle":"tab","href": "#non"+i}).text(item.cd_enm);
+						var _tabPane_div = $('<div/>').attr({'id':"non"+i,"data-bcd":item.cd}).addClass('tab-pane fade');
+					}
+					else{
+						var _gmlist_tab_a = $('<a/>').attr({"data-toggle":"tab","href": "#"+item.chgp_cd}).text(item.cd_enm);
+						var _tabPane_div = $('<div/>').attr({'id':item.chgp_cd,"data-bcd":item.cd}).addClass('tab-pane fade');
+					}
+					
+					_gmlist_tab_li.append(_gmlist_tab_a);
+
+					var _tableResponsive_div = $('<div/>').addClass('table-responsive');
+					var _table = $('<table/>').addClass('table table-bordered');
+					var _thead = $('<thead/>');
+					var _tableHeader_tr = $('<tr/>');
+					var _tbody = $('<tbody/>');
+
+					var _tableHeaderList = ['','gml:gift_list','gml:no','gml:unit_price','gml:total_price'];
+					
+					$.each(_tableHeaderList, function(i, item) {
+
+						var _tableHeader_th = $('<th/>').attr('data-i18n',item);
+						_tableHeader_tr.append(_tableHeader_th);
+
+					});
+
+					_thead.append(_tableHeader_tr);
+					_table.append(_thead).append(_tbody);
+					_tableResponsive_div.append(_table);
+					_tabPane_div.append(_tableResponsive_div);
+
+					if(i == 0){
+						_gmlist_tab_li.addClass('active');
+						_tabPane_div.addClass('in active');
+					}
+
+					$('#giftList').find('.tab-content').append(_tabPane_div);
+					
+					$('#giftList').find('.nav-tabs').append(_gmlist_tab_li);
+					
+					f_formGiftList(item.chgp_cd);
+				});
+			
+			} else {
+				$.each(resultData.data.cd_list, function(i, item) {
+					var _tr = $('<tr/>');
+					
+					var _td_chk = $('<td/>');
+					var _td_chk_label = $('<label/>').addClass('checkbox checkbox-inline');
+					var _td_chk_input = $('<input/>').attr({"type":"checkbox","name":"gift_chk"});
+					_td_chk_label.append(_td_chk_input);
+					_td_chk.append(_td_chk_label);
+
+					var _td_00 = $('<td/>').addClass('ta-c va-m').text(item.cd_enm)
+
+					var _td_01 = $('<td/>');
+					var _td_01_input = $('<input/>').attr({"type":"number","name":"gift_num","disabled":true});
+					_td_01.append(_td_01_input);
+
+					var _td_02 = $('<td/>');
+					var _td_02_input = $('<input/>').attr({"type":"number","name":"gift_damt","disabled":true});
+					_td_02.append(_td_02_input);
+
+					var _td_03 = $('<td/>');
+					var _td_03_input = $('<input/>').attr({"type":"number","name":"gift_total","disabled":true});
+					_td_03.append(_td_03_input);
+
+					_tr.attr('data-scd',item.cd).append(_td_chk).append(_td_00).append(_td_01).append(_td_02).append(_td_03);
+
+					$('#'+item.grp_cd).find('tbody').append(_tr);
+		
+				});
+			}
+		},
+		error: function(obj) {
+	    	var serverObj = obj.responseJSON;
+	    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+	    	return;
+	    }
+	});
+
+ }
+
+ /**
+ * ==================================================================================
+ * 이미지 팝업 호출
+ * ==================================================================================
+ */
+function f_openImageRD(){
+	
+	searchInfo["popup_img"] = searchInfo["letr_atch_file_list"][0];
+
+	if(!searchInfo["popup_img"]){
+		// 이미지가 없습니다.
+		alert($.local_lang.alert_msg.no_image);
+		return false;
+	}
+
+	$.ajax({
+		url: '/html/application/common/imagePopup.html',
+		type: 'GET',
+		success: function(data) {
+			var $target = $('#imageRD');
+			$target.html(data);
+		}
+	});
+
+	$('#imageRD').dialog('open');
+}
+
+ /**
+ * ==================================================================================
+ * Total gift money 계산
+ * ==================================================================================
+ */
+function f_calculateTotalMoney(){
+	var _total_cnt = 0.0;
+	$('input[name=gift_total]').each(function() {
+		if($(this).val()){
+			_total_cnt += parseFloat($(this).val());
+		}
+	});
+	
+	var _gmny_gift_damt = parseFloat($('#gmny_gift_damt').text());
+	
+	if(_total_cnt < _gmny_gift_damt){
+		$('#_total_damt').text(_total_cnt.toFixed(1)).css('color','blue');
+	} else if(_total_cnt > _gmny_gift_damt){
+		$('#_total_damt').text(_total_cnt.toFixed(1)).css('color','red');
+	} else {
+		$('#_total_damt').text(_total_cnt.toFixed(1)).css('color','#555');
+	}
+}
+
+/**
+ * ==================================================================================
+ * 등록화면 GM 등록
+ * ==================================================================================
+ */
+function f_gmRegister(){
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		if ($('#gmDiv').find("input[type=checkbox]:checked").length == 0) {
+			// 체크박스를 선택해주세요.
+			alert($.local_lang.alert_msg.select_checkbox);
+			return;
+		}
+	
+		var _flag = true;
+		var _gift_list=[];
+		
+		// 금액 체크
+		if(parseInt($("#_total_damt").text()) > parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액을 초과했습니다.
+			alert($.local_lang.alert_msg.exceeded_amount);
+			return false
+			
+		}
+		else if(parseInt($("#_total_damt").text()) < parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액이 미달되었습니다.
+			alert($.local_lang.alert_msg.short_amount);
+			return false
+			
+		}
+		
+		// 폼 체크
+		if (!$('#frmGm').formValid()) {
+			return false;
+		}
+		
+		$('input[name=gift_chk]:checked').each(function() {
+			
+			var _gift_bcd = $(this).parents('.tab-pane').attr("data-bcd");
+			var _gift_scd = $(this).parents('tr').attr("data-scd");
+			var _gift_num = $(this).parents('tr').find('input[name=gift_num]').val();
+			var _gift_damt = $(this).parents('tr').find('input[name=gift_damt]').val();
+			
+			var _gift_nm = $(this).parents('tr').children('td').eq(1).text();
+			
+			if(!cf_isNull(_gift_num) || !cf_isNull(_gift_damt)){
+				// 확인해주세요.
+				alert("(" + _gift_nm + ")" + $.local_lang.alert_msg.please_check);
+				_flag = false;
+				return false;
+			}
+	
+			_gift_list.push({
+				'gift_bcd':_gift_bcd,
+				'gift_scd':_gift_scd,
+				'gift_num':_gift_num,
+				'gift_damt':_gift_damt
+			});
+		});
+	
+		if(!_flag){
+			return false;
+		}
+	
+	
+		//이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		//각 이미지 파일 이름
+		var childImgNm_01 = "";
+		var childImgNm_02 = "";
+		var childImgNm_03 = "";
+		var childVideoNm_01 = "";
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			childImgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			childImgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			childImgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_3_" + cf_toDateTime() + '.jpg';
+		}
+	
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+	
+	
+		if(childImgNm_01 == "" && childImgNm_02 == "" && childImgNm_03 == ""){
+			// 이미지는 최소한 1개이상 등록해야 합니다.
+			alert($.local_lang.alert_msg.image_one);
+			return false;
+		}
+		
+		ajaxBlockUI.show();
+	
+		//이미지파일들 업로드 실행
+		var childImgUpload_01 = uploadFileBlob(_imgArr[0], _path, childImgNm_01);
+		var childImgUpload_02 = uploadFileBlob(_imgArr[1], _path, childImgNm_02);
+		var childImgUpload_03 = uploadFileBlob(_imgArr[2], _path, childImgNm_03);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+		
+	}
+
+	$.when(childImgUpload_01, childImgUpload_02, childImgUpload_03, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+		
+			var _file_list = [];
+	
+			//이미지 01
+			if(childImgNm_01){
+				_file_list.push({	
+					'file_nm' : childImgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+	
+			//이미지 02
+			if(childImgNm_02){
+				_file_list.push({	
+					'file_nm' : childImgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+	
+			//이미지 03
+			if(childImgNm_03){
+				_file_list.push({	
+					'file_nm' : childImgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+	
+			//동영상 03
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			}
+		}
+
+
+		var _data = {};
+
+		_data.chrcp_no = searchInfo.chrcp_no;
+		_data.mng_no = searchInfo.mng_no;
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.gift_list = _gift_list;
+		_data.atch_file_list = _file_list;
+		
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0403',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    
+		    	// 등록이 완료되었습니다.
+		    	alert($.local_lang.alert_msg.create_complete);
+				    	
+		    	go_gmlLN();
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * GM 수정
+ * ==================================================================================
+ */
+function f_gmModify(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}	
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		if($('#frmGm').find("input[type=checkbox]:checked").length == 0) {
+			// 체크박스를 선택해주세요.
+			alert($.local_lang.alert_msg.select_checkbox);
+			return;
+		}
+	
+		var _flag = true;
+		var _gift_list=[];
+		
+		// 폼 체크
+		if (!$('#frmGm').formValid()) {
+			return false;
+		}
+		
+		// 금액 체크
+		if(parseInt($("#_total_damt").text()) > parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액을 초과했습니다.
+			alert($.local_lang.alert_msg.exceeded_amount);
+			return false
+			
+		}
+		else if(parseInt($("#_total_damt").text()) < parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액이 미달되었습니다.
+			alert($.local_lang.alert_msg.short_amount);
+			return false
+			
+		}
+		
+		$('input[name=gift_chk]:checked').each(function() {
+			
+			var _gift_bcd = $(this).parents('.tab-pane').attr("data-bcd");
+			var _gift_scd = $(this).parents('tr').attr("data-scd");
+			var _gift_num = $(this).parents('tr').find('input[name=gift_num]').val();
+			var _gift_damt = $(this).parents('tr').find('input[name=gift_damt]').val();
+			
+			var _gift_nm = $(this).parents('tr').children('td').eq(1).text();
+			
+			if(!cf_isNull(_gift_num) || !cf_isNull(_gift_damt)){
+				// 확인해주세요.
+				alert("(" + _gift_nm + ")" + $.local_lang.alert_msg.please_check);
+				_flag = false;
+				return false;
+			}
+	
+			
+			_gift_list.push({
+				'gift_bcd':_gift_bcd,
+				'gift_scd':_gift_scd,
+				'gift_num':_gift_num,
+				'gift_damt':_gift_damt
+			});
+		});
+	
+		if(!_flag){
+			return false;
+		}
+		
+		//이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		//각 이미지 파일 이름
+		var childImgNm_01 = "";
+		var childImgNm_02 = "";
+		var childImgNm_03 = "";
+		var childVideoNm_01 = "";
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			childImgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			childImgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			childImgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_3_" + cf_toDateTime() + '.jpg';
+		}
+	
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+	
+		if(childImgNm_01 == "" && childImgNm_02 == "" && childImgNm_03 == "" && searchInfo.rpt_stcd === "12"){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				
+				if(
+						(item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_02').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_03').hasClass('del')))
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+		
+		ajaxBlockUI.show();
+	
+		//이미지파일들 업로드 실행
+		var childImgUpload_01 = uploadFileBlob(_imgArr[0], _path, childImgNm_01);
+		var childImgUpload_02 = uploadFileBlob(_imgArr[1], _path, childImgNm_02);
+		var childImgUpload_03 = uploadFileBlob(_imgArr[2], _path, childImgNm_03);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+		
+	}
+
+	$.when(childImgUpload_01, childImgUpload_02, childImgUpload_03, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+			var _file_list = [];
+	
+			//이미지 01
+			if(childImgNm_01){
+				_file_list.push({	
+					'file_nm' : childImgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_01').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+	
+			//이미지 02
+			if(childImgNm_02){
+				_file_list.push({	
+					'file_nm' : childImgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_02').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 1 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+	
+			//이미지 03
+			if(childImgNm_03){
+				_file_list.push({	
+					'file_nm' : childImgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_03').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 2 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+	
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if($('#video_file').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+		}
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.gift_list = _gift_list;
+		_data.atch_file_list = _file_list;
+		
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+
+		isAjaxing = true;
+		
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0405',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    	
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.rcp_no = '';
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;
+		    
+				// 수정이 완료되었습니다.
+				alert($.local_lang.alert_msg.update_complete);
+				    	
+		    	go_gmlLN();
+		    	
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},2000);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * Letter 등록
+ * ==================================================================================
+ */
+function f_letterRegister(){
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+	
+		// HO일 경우 Translation 필수값
+		if(localStorage.auth_cd === "330003"){
+			$("#chrpl_eng").attr({ "data-valid-use" : "true", "data-valid-title" : $("#chrpl_eng").parent().prev().children().eq("1").text()})
+		}
+		// CDP일 경우
+		else{
+			// Translation 입력값 최대 2000자 체크
+			if($('#chrpl_eng').val().length > 2000){
+				// Translation은 최대 2000자까지 입니다.
+				alert($.local_lang.alert_msg.translation_max);
+				$('#chrpl_eng').focus();
+				return;
+			}
+		}
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_min_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		else if($('#remrk_eng').val().length < 30 && $('#remrk_eng').attr("data-valid-use")){
+			// Remark는 최소 30자 이상 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_min_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		if (!$('#frmLetter').formValid()) {
+			return false;
+		}
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var imgNm_02 = "";
+		var imgNm_03 = "";
+		var imgNm_04 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			imgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			imgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "3_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_04').files[0] != undefined){
+			imgNm_04 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "LT_" + cf_toDateTime() + '.jpg';
+		}
+
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		
+		if(imgNm_01 == "" && imgNm_02 == "" && imgNm_03 == ""){
+			// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+			alert($.local_lang.alert_msg.image_one);
+			return false;
+		}
+		
+		if(imgNm_04 == ""){
+			// Letter 이미지는 필수입니다.
+			alert($.local_lang.alert_msg.input_letter_image);
+			return false;
+		}
+	
+		ajaxBlockUI.show();
+	
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var imgUpload_02 = uploadFileBlob(_imgArr[1], _path, imgNm_02);
+		var imgUpload_03 = uploadFileBlob(_imgArr[2], _path, imgNm_03);
+		var imgUpload_04 = uploadFileBlob(_imgArr[3], _path, imgNm_04);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+	
+	$.when(imgUpload_01, imgUpload_02, imgUpload_03, imgUpload_04, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			var _file_list = [];
+	
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+	
+			//이미지 02
+			if(imgNm_02){
+				_file_list.push({	
+					'file_nm' : imgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+	
+			//이미지 03
+			if(imgNm_03){
+				_file_list.push({	
+					'file_nm' : imgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+			
+			//이미지 04
+			if(imgNm_04){
+				_file_list.push({	
+					'file_nm' : imgNm_04,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331006'
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} 		
+		}
+		
+		var _data = {};
+
+		_data.chrcp_no = searchInfo.chrcp_no;
+		_data.mng_no = searchInfo.mng_no;
+		_data.chrpl_eng = $('#chrpl_eng').val();
+		_data.swrt_yn = $("input[name=swrt_yn]:checked").val();
+		_data.swrtr_rlcd = $('#swrtr_rlcd').val();
+		_data.swrt_rncd = $('#swrt_rncd').val();
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0404',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    
+		    	// 등록이 완료되었습니다.
+		    	alert($.local_lang.alert_msg.create_complete);
+				    	
+		    	go_gmlLN();
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * Letter 수정
+ * ==================================================================================
+ */
+function f_letterModify(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}	
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+	
+		// HO일 경우 Translation 필수값
+		if(localStorage.auth_cd === "330003"){
+			$("#chrpl_eng").attr({ "data-valid-use" : "true", "data-valid-title" : $("#chrpl_eng").parent().prev().children().eq("1").text()})
+		}
+		// CDP일 경우
+		else{
+			// Translation 입력값 최대 2000자 체크
+			if($('#chrpl_eng').val().length > 2000){
+				// Translation은 최대 2000자까지 입니다.
+				alert($.local_lang.alert_msg.translation_max);
+				$('#chrpl_eng').focus();
+				return;
+			}
+		}
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		if (!$('#frmLetter').formValid()) {
+			return false;
+		}
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var imgNm_02 = "";
+		var imgNm_03 = "";
+		var imgNm_04 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			imgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			imgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "3_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_04').files[0] != undefined){
+			imgNm_04 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "LT_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		if(imgNm_01 == "" && imgNm_02 == "" && imgNm_03 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(
+						(item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_02').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_03').hasClass('del')))
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+		
+		if(imgNm_04 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(item.img_dvcd === '331006' && !$('#img_file_04').hasClass('del')){
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// Letter 이미지는 필수입니다.
+				alert($.local_lang.alert_msg.input_letter_image);
+				return false;
+			}
+		}
+		
+		ajaxBlockUI.show();
+	
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var imgUpload_02 = uploadFileBlob(_imgArr[1], _path, imgNm_02);
+		var imgUpload_03 = uploadFileBlob(_imgArr[2], _path, imgNm_03);
+		var imgUpload_04 = uploadFileBlob(_imgArr[3], _path, imgNm_04);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+	
+	$.when(imgUpload_01, imgUpload_02, imgUpload_03, imgUpload_04, childVideoNm_01).then(function() {
+		
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+			var _file_list = [];
+			
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_01').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0){
+						_file_list.push(item);
+					}
+				});
+			}
+	
+			//이미지 02
+			if(imgNm_02){
+				_file_list.push({	
+					'file_nm' : imgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_02').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 1 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+	
+			//이미지 03
+			if(imgNm_03){
+				_file_list.push({	
+					'file_nm' : imgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_03').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 2 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//이미지 04
+			if(imgNm_04){
+				_file_list.push({	
+					'file_nm' : imgNm_04,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331006'
+				});
+			} else if($('#img_file_04').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331006'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if($('#video_file').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+		}
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.chrpl_eng = $('#chrpl_eng').val();
+		_data.swrt_yn = $("input[name=swrt_yn]:checked").val();
+		_data.swrtr_rlcd = $('#swrtr_rlcd').val();
+		_data.swrt_rncd = $('#swrt_rncd').val();
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+		
+		isAjaxing = true;		
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0406',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    
+				// 수정이 완료되었습니다.
+				alert($.local_lang.alert_msg.update_complete);
+				
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.rcp_no = '';
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;
+				    	
+		    	go_gmlLN();
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},2000);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * Card 등록
+ * ==================================================================================
+ */
+function f_cardRegister(){
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+	
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_min_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		else if($('#remrk_eng').val().length < 30 && $('#remrk_eng').attr("data-valid-use")){
+			// Remark는 최소 30자 이상 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_min_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		if (!$('#frmLetter').formValid()) {
+			return false;
+		}
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		
+		if(imgNm_01 == ""){
+			// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+			alert($.local_lang.alert_msg.image_one);
+			return false;
+		}
+		if(childVideoNm_01 == ""){
+			// 아동 동영상은 최소한 1개이상 등록해야 합니다.
+			alert($.local_lang.alert_msg.video_one);
+			return false;
+			
+		}
+		
+		//Card Info List
+		var _card_list_data = $('#card_info_div').serializeFormObject();
+		var _card_count = 0;
+		
+		$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+			if(_ans_cd != ""){
+				_card_count++;
+			}
+		});
+		
+		if(_card_count != $("select[name=ans_cd]" , document.form).length){
+			// Card Information를 입력하세요.
+			alert($.local_lang.alert_msg.input_card);
+			return false;
+		}
+	
+		ajaxBlockUI.show();
+	
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+	
+	$.when(imgUpload_01, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			var _file_list = [];
+	
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} 		
+		}
+		
+		//Card Info List
+		var _card_list_data = $('#card_info_div').serializeFormObject();
+		var _card_list = [];
+		
+		$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+			$.each(_card_list_data.card_cd, function(j, _card_cd) {
+				if(i === j){
+					_card_list.push({
+						'card_cd' : _card_cd,
+						'ans_cd' : _ans_cd
+					});
+				}
+			});
+		});
+		
+		var _data = {};
+
+		_data.chrcp_no = searchInfo.chrcp_no;
+		_data.mng_no = searchInfo.mng_no;
+		_data.card_list = _card_list;			//Card Info List
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0409',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    
+		    	// 등록이 완료되었습니다.
+		    	alert($.local_lang.alert_msg.create_complete);
+				    	
+		    	go_gmlLN();
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	return;
+		    }
+		});
+		
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * Card 수정
+ * ==================================================================================
+ */
+function f_cardModify(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}	
+	
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		/*if (!$('#frmLetter').formValid()) {
+			return false;
+		}*/
+		
+		//Card Info List
+		var _card_list_data = $('#card_info_div').serializeFormObject();
+		var _card_count = 0;
+		
+		$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+			if(_ans_cd != ""){
+				_card_count++;
+			}
+		});
+		
+		if(_card_count != $("select[name=ans_cd]" , document.form).length){
+			// Card Information를 입력하세요.
+			alert($.local_lang.alert_msg.input_card);
+			return false;
+		}
+		
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		if(imgNm_01 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(
+						(item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')) )
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+		
+		if(childVideoNm_01 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(item.img_dvcd === '331004' && !$('#video_file').hasClass('del')){
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// Video 는 필수입니다.
+				alert($.local_lang.alert_msg.video_one);
+				return false;
+			}
+		}
+		
+		ajaxBlockUI.show();
+	
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+		
+		
+	}
+	
+	$.when(imgUpload_01, childVideoNm_01).then(function() {
+		
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+			var _file_list = [];
+			
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_01').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if($('#video_file').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+		}
+		
+		//Card Info List
+		var _card_list_data = $('#card_info_div').serializeFormObject();
+		var _card_list = [];
+		
+		$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+			$.each(_card_list_data.card_cd, function(j, _card_cd) {
+				if(i === j){
+					_card_list.push({
+						'card_cd' : _card_cd,
+						'ans_cd' : _ans_cd
+					});
+				}
+			});
+		});
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.card_list = _card_list;
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+		
+		isAjaxing = true;		
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0411',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    
+				// 수정이 완료되었습니다.
+				alert($.local_lang.alert_msg.update_complete);
+				
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.rcp_no = '';
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;
+				    	
+		    	go_gmlLN();
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    },
+			error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+		    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    	return;
+		    }
+		});
+		
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},2000);
+		return;
+	});
+}
+
+/**
+ * ==================================================================================
+ * GM : 스크리닝 Pass 클릭
+ * ==================================================================================
+ */
+function f_gmScreen(option){
+	
+	var _data = {'rcp_no' : searchInfo["rcp_no"]};
+	var	_api = '';
+
+	if(option == 'P'){
+		_api = '/bo/report/common/api-204-0001';
+
+	} else if(option == 'R'){
+		_api = '/bo/report/common/api-204-0002';
+		
+		var _return_data = $("#frmReturn").serializeFormObject();
+		_data["rtrn_list"] = [];
+		
+		if(_return_data.rtrn_bcd[0]){
+
+			var _rtrn_bcd_obj_01 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[0],
+				'rtrn_scd' : _return_data.rtrn_scd[0],
+				'rtrn_detl' : _return_data.rtrn_detl[0]
+			}
+			_data["rtrn_list"].push(_rtrn_bcd_obj_01);
+		}else{
+			// 리턴사유가 없습니다.
+			alert($.local_lang.alert_msg.not_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_scd[0] === ""){
+			// 하위리턴사유를 입력해주세요.
+			alert($.local_lang.alert_msg.not_sub_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_bcd[1]){
+
+			var _rtrn_bcd_obj_02 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[1],
+				'rtrn_scd' : _return_data.rtrn_scd[1],
+				'rtrn_detl' : _return_data.rtrn_detl[1]
+			}
+			
+			_data["rtrn_list"].push(_rtrn_bcd_obj_02);
+		}
+
+
+	} else {
+		return false;
+	}
+	
+	$.ajax({
+	    url: api_url + _api,
+	    type: 'POST',
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: JSON.stringify(_data),
+	    success: function(obj){
+	    	// 완료
+	    	alert($.local_lang.alert_msg.complete);
+			//현재 rcp_no 인덱스
+			var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//배열의 해당 요소 삭제
+			searchInfo["rcp_no_list"] = $.grep(searchInfo["rcp_no_list"], function(n,i){  // 배열의 원소수만큼 반복
+		        return n !== searchInfo["rcp_no"];  // array에서 현재 rcp_no 제거 후 return
+		    });
+
+			//새로운 배열의 개수가 없으면 끝
+			if(searchInfo["rcp_no_list"].length <= 0){
+				// 스크리닝이 완료되었습니다.
+				alert($.local_lang.alert_msg.screening_completed);
+		    	go_gmlLN();
+		    	return false;
+		    }
+
+		    //마지막 요소 일경우 이전 인덱스 요소 선택
+			if(array_index == (searchInfo["rcp_no_list"].length)){
+				array_index = array_index-1;
+			}
+			
+			//rcp_no 변경
+			searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index];
+		    
+		    //삭제된 배열의 해당 요소 인덱스 
+			var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//새로운 rco_no가 마지막 요소일 경우 다음 버튼 숨김
+		    if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+		    	$('#btn_next').hide();
+		    }
+		    
+		    //새로운 rco_no가 첫번째 요소일 경우 이전 버튼 숨김
+		    if(new_arr_index <= 0) {
+		    	$('#btn_prev').hide();
+		    }
+		    
+		    // 스크리닝 수정페이지에서 수정 후 전 스크리닝 페이지로 이동
+		    if(searchInfo._status === "modify"){
+		    	back_gmSN();
+			}
+		    
+		    f_gmInfo();
+				
+			$('html').scrollTop(0);
+
+			$('#rtrn_bcd_01').change();
+			$('#rtrn_bcd_02').change();
+
+	    },
+	    error: function(obj) {
+	    	var serverObj = obj.responseJSON;
+    		alert(cf_msg(serverObj.message));
+	    	return;
+	    }
+	});
+}
+
+/**
+ * ==================================================================================
+ * Letter : 스크리닝 Pass 클릭
+ * ==================================================================================
+ */
+function f_letterScreen(option){
+	
+	
+	
+	var _data = {'rcp_no' : searchInfo["rcp_no"]};
+	var	_api = '';
+
+	if(option == 'P'){
+		_api = '/bo/report/common/api-204-0001';
+		
+		//unable to register 체크 안 되어 있을 때 Translation 체크  _19.05.16
+		if(!$("#unable_reg_yn").is(":checked")){
+			//Translation 체크
+			if($("#chrpl_eng").val() === ""){
+				// 수정페이지에서 Translation을 입력해주세요.
+				alert($.local_lang.alert_msg.please_enter_translation);
+				return;
+			}
+		}	
+
+	} else if(option == 'R'){
+		_api = '/bo/report/common/api-204-0002';
+		
+		var _return_data = $("#frmReturn").serializeFormObject();
+		_data["rtrn_list"] = [];
+		if(_return_data.rtrn_bcd[0]){
+
+			var _rtrn_bcd_obj_01 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[0],
+				'rtrn_scd' : _return_data.rtrn_scd[0],
+				'rtrn_detl' : _return_data.rtrn_detl[0]
+			}
+			_data["rtrn_list"].push(_rtrn_bcd_obj_01);
+		}else{
+			// 리턴사유가 없습니다.
+			alert($.local_lang.alert_msg.not_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_scd[0] === ""){
+			// 하위리턴사유를 입력해주세요.
+			alert($.local_lang.alert_msg.not_sub_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_bcd[1]){
+
+			var _rtrn_bcd_obj_02 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[1],
+				'rtrn_scd' : _return_data.rtrn_scd[1],
+				'rtrn_detl' : _return_data.rtrn_detl[1]
+			}
+			
+			_data["rtrn_list"].push(_rtrn_bcd_obj_02);
+		}
+
+
+	} else {
+		return false;
+	}
+
+	$.ajax({
+	    url: api_url + _api,
+	    type: 'POST',
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: JSON.stringify(_data),
+	    success: function(obj){
+			// 정상처리 되었습니다.
+			alert($.local_lang.alert_msg.successfully_processed);
+			//현재 rcp_no 인덱스
+			var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//배열의 해당 요소 삭제
+			searchInfo["rcp_no_list"] = $.grep(searchInfo["rcp_no_list"], function(n,i){  // 배열의 원소수만큼 반복
+		        return n !== searchInfo["rcp_no"];  // array에서 현재 rcp_no 제거 후 return
+		    });
+
+			//새로운 배열의 개수가 없으면 끝
+			if(searchInfo["rcp_no_list"].length <= 0){
+				// 스크리닝이 완료되었습니다.
+				alert($.local_lang.alert_msg.screening_completed);
+		    	go_gmlLN();
+		    	return false;
+		    }
+
+		    //마지막 요소 일경우 이전 인덱스 요소 선택
+			if(array_index == (searchInfo["rcp_no_list"].length)){
+				array_index = array_index-1;
+			}
+			
+			//rcp_no 변경
+			searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index];
+		    
+		    //삭제된 배열의 해당 요소 인덱스 
+			var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//새로운 rco_no가 마지막 요소일 경우 다음 버튼 숨김
+		    if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+		    	$('#btn_next').hide();
+		    }
+		    
+		    //새로운 rco_no가 첫번째 요소일 경우 이전 버튼 숨김
+		    if(new_arr_index <= 0) {
+		    	$('#btn_prev').hide();
+		    }
+		    
+		    // 스크리닝 수정페이지에서 수정 후 전 스크리닝 페이지로 이동
+		    if(searchInfo._status === "modify"){
+		    	back_letterSN();
+		    	return;
+			}
+		    
+		    $('#rtrn_bcd_01').val('');
+			$('#rtrn_bcd_02').val('');
+			$('#rtrn_scd_01').val('');
+			$('#rtrn_scd_02').val('');
+			$('#rtrn_detl_01').val('');
+			$('#rtrn_detl_02').val('');
+			$('#rtrn_scd_01').attr('disabled', true);
+			$('#rtrn_scd_02').attr('disabled', true);
+			$('#rtrn_detl_01').attr('readonly', true);
+			$('#rtrn_detl_02').attr('readonly', true);
+		    
+			$('html').scrollTop(0);
+
+			$('#rtrn_bcd_01').change();
+			$('#rtrn_bcd_02').change();
+
+	    }
+	});
+}
+
+/**
+ * ==================================================================================
+ * Card : 스크리닝 Pass 클릭
+ * ==================================================================================
+ */
+function f_cardScreen(option){
+	
+	var _data = {'rcp_no' : searchInfo["rcp_no"]};
+	var	_api = '';
+
+	if(option == 'P'){
+		_api = '/bo/report/common/api-204-0001';
+		
+		//unable to register 체크 안 되어 있을 때 Translation 체크  _19.05.16
+		if(!$("#unable_reg_yn").is(":checked")){
+
+		}	
+
+	} else if(option == 'R'){
+		_api = '/bo/report/common/api-204-0002';
+		
+		var _return_data = $("#frmReturn").serializeFormObject();
+		_data["rtrn_list"] = [];
+		if(_return_data.rtrn_bcd[0]){
+
+			var _rtrn_bcd_obj_01 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[0],
+				'rtrn_scd' : _return_data.rtrn_scd[0],
+				'rtrn_detl' : _return_data.rtrn_detl[0]
+			}
+			_data["rtrn_list"].push(_rtrn_bcd_obj_01);
+		}else{
+			// 리턴사유가 없습니다.
+			alert($.local_lang.alert_msg.not_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_scd[0] === ""){
+			// 하위리턴사유를 입력해주세요.
+			alert($.local_lang.alert_msg.not_sub_return_reason);
+			return false;
+		}
+		
+		if(_return_data.rtrn_bcd[1]){
+
+			var _rtrn_bcd_obj_02 = {
+				'rtrn_bcd' : _return_data.rtrn_bcd[1],
+				'rtrn_scd' : _return_data.rtrn_scd[1],
+				'rtrn_detl' : _return_data.rtrn_detl[1]
+			}
+			
+			_data["rtrn_list"].push(_rtrn_bcd_obj_02);
+		}
+
+
+	} else {
+		return false;
+	}
+
+	$.ajax({
+	    url: api_url + _api,
+	    type: 'POST',
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: JSON.stringify(_data),
+	    success: function(obj){
+			// 정상처리 되었습니다.
+			alert($.local_lang.alert_msg.successfully_processed);
+			//현재 rcp_no 인덱스
+			var array_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//배열의 해당 요소 삭제
+			searchInfo["rcp_no_list"] = $.grep(searchInfo["rcp_no_list"], function(n,i){  // 배열의 원소수만큼 반복
+		        return n !== searchInfo["rcp_no"];  // array에서 현재 rcp_no 제거 후 return
+		    });
+
+			//새로운 배열의 개수가 없으면 끝
+			if(searchInfo["rcp_no_list"].length <= 0){
+				// 스크리닝이 완료되었습니다.
+				alert($.local_lang.alert_msg.screening_completed);
+		    	go_gmlLN();
+		    	return false;
+		    }
+
+		    //마지막 요소 일경우 이전 인덱스 요소 선택
+			if(array_index == (searchInfo["rcp_no_list"].length)){
+				array_index = array_index-1;
+			}
+			
+			//rcp_no 변경
+			searchInfo["rcp_no"] = searchInfo["rcp_no_list"][array_index];
+		    
+		    //삭제된 배열의 해당 요소 인덱스 
+			var new_arr_index = $.inArray(searchInfo["rcp_no"] , searchInfo["rcp_no_list"]);
+
+			//새로운 rco_no가 마지막 요소일 경우 다음 버튼 숨김
+		    if(new_arr_index >= (searchInfo["rcp_no_list"].length-1)){
+		    	$('#btn_next').hide();
+		    }
+		    
+		    //새로운 rco_no가 첫번째 요소일 경우 이전 버튼 숨김
+		    if(new_arr_index <= 0) {
+		    	$('#btn_prev').hide();
+		    }
+		    
+		    // 스크리닝 수정페이지에서 수정 후 전 스크리닝 페이지로 이동
+		    if(searchInfo._status === "modify"){
+		    	back_cardSN();
+		    	return;
+			}
+		    
+		    $('#rtrn_bcd_01').val('');
+			$('#rtrn_bcd_02').val('');
+			$('#rtrn_scd_01').val('');
+			$('#rtrn_scd_02').val('');
+			$('#rtrn_detl_01').val('');
+			$('#rtrn_detl_02').val('');
+			$('#rtrn_scd_01').attr('disabled', true);
+			$('#rtrn_scd_02').attr('disabled', true);
+			$('#rtrn_detl_01').attr('readonly', true);
+			$('#rtrn_detl_02').attr('readonly', true);
+		    
+			$('html').scrollTop(0);
+
+			$('#rtrn_bcd_01').change();
+			$('#rtrn_bcd_02').change();
+
+	    }
+	});
+}
+
+/**
+ * ==================================================================================
+ * Send to Ho
+ * ==================================================================================
+ */
+function f_gmlSendToHO(){
+
+	var _data = {
+		"rcp_no" : []
+	};
+	
+	$.each(jQuery("#gml_grid").find('input[role=checkbox]:checked'), function() {
+		var id = $(this).parents("tr").attr("id");
+		
+		var rowObject = $("#gml_grid").getRowData(id);      //체크된 id의 row 데이터 정보를 Object 형태로 반환
+        
+       	if(localStorage.auth_cd === "330004" && rowObject.rpt_stcd === '13'){
+	 		_data["rcp_no"].push(rowObject.rcp_no);
+        }
+	});
+
+	if(_data["rcp_no"].length <= 0){
+		// 체크박스를 선택해주세요.
+		alert($.local_lang.alert_msg.select_checkbox);
+		return false;
+	}
+
+   	$.ajax({
+	    url: api_url + '/bo/report/common/api-204-0000',
+	    type: 'POST',
+	    datatype: 'json',
+	    contentType: 'application/json;charset=utf-8',
+	    data: JSON.stringify(_data),
+	    success: function(obj){
+	    
+	    	// 완료
+	    	alert($.local_lang.alert_msg.complete);
+	    	go_gmlLN();
+	    	
+	    }
+	});
+}
+
+/**
+ * ==================================================================================
+ * 27. GM : 스크리닝 Modify & Pass 클릭
+ * ==================================================================================
+ */
+function f_gmModifyPass(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}	
+	
+	/****************************** 수정 ********************************/
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		if($('#frmGm').find("input[type=checkbox]:checked").length == 0) {
+			// 체크박스를 선택해주세요.
+			alert($.local_lang.alert_msg.select_checkbox);
+			return;
+		}
+		
+		var _flag = true;
+		var _gift_list=[];
+		
+		// 금액 체크
+		if(parseInt($("#_total_damt").text()) > parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액을 초과했습니다.
+			alert($.local_lang.alert_msg.exceeded_amount);
+			return false
+			
+		}
+		else if(parseInt($("#_total_damt").text()) < parseInt($("#gmny_gift_damt").text())){
+			
+			// 금액이 미달되었습니다.
+			alert($.local_lang.alert_msg.short_amount);
+			return false
+			
+		}
+		
+		$('input[name=gift_chk]:checked').each(function() {
+			
+			var _gift_bcd = $(this).parents('.tab-pane').attr("data-bcd");
+			var _gift_scd = $(this).parents('tr').attr("data-scd");
+			var _gift_num = $(this).parents('tr').find('input[name=gift_num]').val();
+			var _gift_damt = $(this).parents('tr').find('input[name=gift_damt]').val();
+			
+			var _gift_nm = $(this).parents('tr').children('td').eq(1).text();
+			
+			if(!cf_isNull(_gift_num) || !cf_isNull(_gift_damt)){
+				// 확인해주세요.
+				alert("(" + _gift_nm + ")" + $.local_lang.alert_msg.please_check);
+				_flag = false;
+				return false;
+			}
+	
+			_gift_list.push({
+				'gift_bcd':_gift_bcd,
+				'gift_scd':_gift_scd,
+				'gift_num':_gift_num,
+				'gift_damt':_gift_damt
+			});
+		});
+	
+		if(!_flag){
+			return false;
+		}
+	
+		//이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		//각 이미지 파일 이름
+		var childImgNm_01 = "";
+		var childImgNm_02 = "";
+		var childImgNm_03 = "";
+		var childVideoNm_01 = "";
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			childImgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			childImgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			childImgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_3_" + cf_toDateTime() + '.jpg';
+		}
+	
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+	
+	
+		if(childImgNm_01 == "" && childImgNm_02 == "" && childImgNm_03 == ""){
+			
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if((item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')) ||
+				   (item.img_dvcd === '331001' && !$('#img_file_02').hasClass('del')) ||
+				   (item.img_dvcd === '331001' && !$('#img_file_03').hasClass('del')))
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+	
+		ajaxBlockUI.show();
+		
+		//이미지파일들 업로드 실행
+		var childImgUpload_01 = uploadFileBlob(_imgArr[0], _path, childImgNm_01);
+		var childImgUpload_02 = uploadFileBlob(_imgArr[1], _path, childImgNm_02);
+		var childImgUpload_03 = uploadFileBlob(_imgArr[2], _path, childImgNm_03);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+
+	$.when(childImgUpload_01, childImgUpload_02, childImgUpload_03, childVideoUpload_01).then(function() {
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+		var _file_list = [];
+
+		//이미지 01
+			if(childImgNm_01){
+				_file_list.push({	
+					'file_nm' : childImgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_01').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+
+			//이미지 02
+			if(childImgNm_02){
+				_file_list.push({	
+					'file_nm' : childImgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_02').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 1 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+
+			//이미지 03
+			if(childImgNm_03){
+				_file_list.push({	
+					'file_nm' : childImgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if($('#img_file_03').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 2 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if($('#video_file').hasClass('del')) {
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+		}
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.gift_list = _gift_list;
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+
+		isAjaxing = true;		
+		
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0405',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    	
+		    	
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;		    			    	
+		    
+		    	searchInfo._status = "modify";
+		    	
+		    	// 수정 후 패스 처리
+		    	if(localStorage.auth_cd === "330003" && ["14"].indexOf(searchInfo.rpt_stcd) > -1){ // W(HO)
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_gmScreen('P');
+
+				}else if(localStorage.auth_cd === "330003" && ["2"].indexOf(searchInfo.rpt_stcd) > -1){ // TR
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_gmScreen('P');
+				}
+		    	setTimeout(function(){ isAjaxing = false;},2000);
+		    	isAjaxing = false;
+		    	
+		    	
+		    },
+		    error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+	    		alert(cf_msg(serverObj.message));
+	    		setTimeout(function(){ isAjaxing = false;},2000);
+	    		isAjaxing = false;
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},5000);
+		isAjaxing = false;
+		return;
+	});
+	
+	/**************************** 수정 끝 **********************************/
+	
+}
+
+/**
+ * ==================================================================================
+ * Letter : 스크리닝 Modify & Pass 클릭
+ * ==================================================================================
+ */
+function f_letterModifyPass(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}		
+	
+	/****************************** 수정 ********************************/
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		// HO일 경우 Translation 필수값
+		if(localStorage.auth_cd === "330003"){
+			$("#chrpl_eng").attr({ "data-valid-use" : "true", "data-valid-title" : $("#chrpl_eng").parent().prev().children().eq("1").text()})
+		}
+		// CDP일 경우
+		else{
+			// Translation 입력값 최대 2000자 체크
+			if($('#chrpl_eng').val().length > 2000){
+				// Translation은 최대 2000자까지 입니다.
+				alert($.local_lang.alert_msg.translation_max);
+				$('#chrpl_eng').focus();
+				return;
+			}
+		}
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		if (!$('#frmLetter').formValid()) {
+			return false;
+		}
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var imgNm_02 = "";
+		var imgNm_03 = "";
+		var imgNm_04 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_02').files[0] != undefined){
+			imgNm_02 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "2_" + cf_toDateTime() + '.jpg';
+		} 
+		
+		if(document.getElementById('img_file_03').files[0] != undefined){
+			imgNm_03 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "3_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('img_file_04').files[0] != undefined){
+			imgNm_04 = "GML_"  + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "LT_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		if(imgNm_01 == "" && imgNm_02 == "" && imgNm_03 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(
+						(item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_02').hasClass('del')) ||
+						(item.img_dvcd === '331001' && !$('#img_file_03').hasClass('del')))
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+		
+		if(imgNm_04 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(item.img_dvcd === '331006' && !$('#img_file_04').hasClass('del')){
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// Letter 이미지는 필수입니다.
+				alert($.local_lang.alert_msg.input_letter_image);
+				return false;
+			}
+		}
+		
+		ajaxBlockUI.show();
+		
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var imgUpload_02 = uploadFileBlob(_imgArr[1], _path, imgNm_02);
+		var imgUpload_03 = uploadFileBlob(_imgArr[2], _path, imgNm_03);
+		var imgUpload_04 = uploadFileBlob(_imgArr[3], _path, imgNm_04);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+		
+	$.when(imgUpload_01, imgUpload_02, imgUpload_03, imgUpload_04, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+			var _file_list = [];
+
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_01').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0){
+						_file_list.push(item);
+					}
+				});
+			}
+
+			//이미지 02
+			if(imgNm_02){
+				_file_list.push({	
+					'file_nm' : imgNm_02,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_02').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 1 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+
+			//이미지 03
+			if(imgNm_03){
+				_file_list.push({	
+					'file_nm' : imgNm_03,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_03').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 2 && item.img_dvcd === '331001'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//이미지 04
+			if(imgNm_04){
+				_file_list.push({	
+					'file_nm' : imgNm_04,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331006'
+				});
+			} else if ($('#img_file_04').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331006'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if ($('#video_file').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+		}
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.chrpl_eng = $('#chrpl_eng').val();
+		_data.swrt_yn = $("input[name=swrt_yn]:checked").val();
+		_data.swrtr_rlcd = $('#swrtr_rlcd').val();
+		_data.swrt_rncd = $('#swrt_rncd').val();
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+		
+		isAjaxing = true;		
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0406',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    	
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;
+		    	
+		    	searchInfo._status = "modify";
+		    	
+		    	// 수정 후 패스 처리
+		    	if(localStorage.auth_cd === "330003" && ["14"].indexOf(searchInfo.rpt_stcd) > -1){ // W(HO)
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_letterScreen('P');
+
+				}else if(localStorage.auth_cd === "330003" && ["2"].indexOf(searchInfo.rpt_stcd) > -1){ // TR
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_letterScreen('P');
+				}
+		    	setTimeout(function(){ isAjaxing = false;},5000);
+		    },
+		    error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+	    		alert(cf_msg(serverObj.message));
+	    		setTimeout(function(){ isAjaxing = false;},5000);
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},5000);
+		return;
+	});
+		
+	/**************************** 수정 끝 **********************************/
+		
+}
+
+/**
+ * ==================================================================================
+ * Card : 스크리닝 Modify & Pass 클릭
+ * ==================================================================================
+ */
+function f_cardModifyPass(){
+	
+	if(isAjaxing){
+		alert($.local_lang.alert_msg.now_processing);
+		return;
+	}		
+	
+	/****************************** 수정 ********************************/
+	// Unable to Register 버튼 체크하지 않을 시
+	if(!$("#unable_reg_yn").is(":checked")){
+		
+		
+		// Remark 입력값 최대 2000자 체크
+		if($('#remrk_eng').val().length > 2000){
+			// Remark은 최대 2000자까지 입니다.
+			alert($.local_lang.alert_msg.remark_max);
+			$('#remrk_eng').focus();
+			return;
+		}
+		
+		/*if (!$('#frmLetter').formValid()) {
+			return false;
+		}*/
+		
+		//각 이미지 파일 이름
+		var imgNm_01 = "";
+		var childVideoNm_01 = "";
+		
+		// 이미지 업로드 경로
+		var _path = "/" + localStorage.getItem("ctr_cd") + "/" + searchInfo.chrcp_no;
+		
+		if(document.getElementById('img_file_01').files[0] != undefined){
+			imgNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_" + "1_" + cf_toDateTime() + '.jpg';
+		}
+		
+		if(document.getElementById('video_file').files[0] != undefined){
+			var _fileName = $('#video_file').val();
+			var _fileExt = _fileName.substring(_fileName.lastIndexOf('.')).toLowerCase();  // 파일 확장자
+			childVideoNm_01 = "GML_" + searchInfo.mng_no + "_" + searchInfo.chrcp_no + "_Vl_" + cf_toDateTime() + _fileExt;
+		}
+		
+		if(imgNm_01 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(
+						(item.img_dvcd === '331001' && !$('#img_file_01').hasClass('del')))
+				{
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// 아동 이미지는 최소한 1개이상 등록해야 합니다.
+				alert($.local_lang.alert_msg.image_one);
+				return false;
+			}
+		}
+		
+		if(childVideoNm_01 == ""){
+			var flag = 'N';
+			
+			$.each(searchInfo._file_list, function(i, item) {
+				if(item.img_dvcd === '331004' && !$('#video_file').hasClass('del')){
+					flag = 'Y';
+				}
+			});
+			
+			if(flag == 'N') {
+				// Video 는 필수입니다.
+				alert($.local_lang.alert_msg.video_one);
+				return false;
+			}
+		}
+		
+		//Card Info List
+		var _card_list_data = $('#card_info_div').serializeFormObject();
+		var _card_count = 0;
+		
+		$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+			if(_ans_cd != ""){
+				_card_count++;
+			}
+		});
+		
+		if(_card_count != $("select[name=ans_cd]" , document.form).length){
+			// Card Information를 입력하세요.
+			alert($.local_lang.alert_msg.input_card);
+			return false;
+		}
+		
+		ajaxBlockUI.show();
+		
+		// 이미지파일들 업로드 실행
+		var imgUpload_01 = uploadFileBlob(_imgArr[0], _path, imgNm_01);
+		var childVideoUpload_01 = uploadFileImg('video_file', _path, childVideoNm_01);
+	}
+		
+	$.when(imgUpload_01, childVideoUpload_01).then(function() {
+
+		// Unable to Register 버튼 체크하지 않을 시
+		if(!$("#unable_reg_yn").is(":checked")){
+			
+			var _file_list = [];
+
+			//이미지 01
+			if(imgNm_01){
+				_file_list.push({	
+					'file_nm' : imgNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331001'
+				});
+			} else if ($('#img_file_01').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(i === 0){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//동영상
+			if(childVideoNm_01){
+				_file_list.push({	
+					'file_nm' : childVideoNm_01,
+					'file_path': _S3_DEFAULT_PATH + _path,
+					'img_dvcd' :  '331004'
+				});
+			} else if ($('#video_file').hasClass('del')){
+				// 파일삭제
+			} else {
+				$.each(searchInfo._file_list, function(i, item) {
+					if(item.img_dvcd === '331004'){
+						_file_list.push(item);
+					}
+				});
+			}
+			
+			//Card Info List
+			var _card_list_data = $('#card_info_div').serializeFormObject();
+			var _card_list = [];
+			
+			$.each(_card_list_data.ans_cd, function(i, _ans_cd) {
+				$.each(_card_list_data.card_cd, function(j, _card_cd) {
+					if(i === j){
+						_card_list.push({
+							'card_cd' : _card_cd,
+							'ans_cd' : _ans_cd
+						});
+					}
+				});
+			});
+			
+		}
+
+		var _data = {};
+
+		_data.rcp_no = searchInfo.rcp_no;
+		_data.remrk_eng = $('#remrk_eng').val();
+		_data.card_list = _card_list;
+		_data.atch_file_list = _file_list;
+
+		if($("#unable_reg_yn").is(":checked")){
+			_data.unable_reg_yn = 'Y';
+		}
+		_data.drop_rcp_no = searchInfo.drop_rcp_no;
+		
+		isAjaxing = true;		
+
+		$.ajax({
+		    url: api_url + '/bo/report/gml/api-204-0411',
+		    type: 'POST',
+		    datatype: 'json',
+		    contentType: 'application/json;charset=utf-8',
+		    data: JSON.stringify(_data),
+		    success: function(obj){
+		    	
+				// 수정후 화면에서 사용하는 데이터 삭제
+				searchInfo.chrcp_no = '';
+		    	searchInfo.mng_no ='';
+		    	searchInfo.drop_rcp_no='';
+		    	delete searchInfo._file_list;
+		    	
+		    	searchInfo._status = "modify";
+		    	
+		    	// 수정 후 패스 처리
+		    	if(localStorage.auth_cd === "330003" && ["14"].indexOf(searchInfo.rpt_stcd) > -1){ // W(HO)
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_cardScreen('P');
+
+				}else if(localStorage.auth_cd === "330003" && ["2"].indexOf(searchInfo.rpt_stcd) > -1){ // TR
+					searchInfo["rcp_no_list"].push(searchInfo.rcp_no);
+					f_cardScreen('P');
+				}
+		    	setTimeout(function(){ isAjaxing = false;},5000);
+		    },
+		    error: function(obj) {
+		    	var serverObj = obj.responseJSON;
+	    		alert(cf_msg(serverObj.message));
+	    		setTimeout(function(){ isAjaxing = false;},5000);
+		    	return;
+		    }
+		});
+	}, function() {
+		ajaxBlockUI.hide();
+		// 이미지 업로드 실패
+		alert($.local_lang.alert_msg.image_upload_failed);
+		setTimeout(function(){ isAjaxing = false;},5000);
+		return;
+	});
+		
+	/**************************** 수정 끝 **********************************/
+		
+}
+
+/**
+ * ==================================================================================
+ * Card Info 목록 조회
+ * ==================================================================================
+ */
+function f_selectCardInfoList(){
+	//var _year = searchInfo.year;
+	var nowDate = new Date();
+	var _year = nowDate.getFullYear();
+	var _data = {
+		'year' : _year
+	}	 
+	$.ajax({
+		url: api_url + "/bo/common/code/api-200-0013",
+		type: "GET",
+		async: false,
+		//data: encodeURI('params='+JSON.stringify({})),
+		data: encodeURI('params='+JSON.stringify(_data)),
+		success: function (resultData) {
+			$.each(resultData.data.card_list, function(i, item) {
+				var card_div = $('<div/>').addClass("form-group");
+				var label    = $('<label/>').addClass("col-md-2 control-label cs-css-05").text("*" + item.card_nm);
+				var ans_div  = $('<div/>').addClass("col-md-4").css({"display":"flex"});
+				var card_hidden = $('<input/>').attr({'type':'hidden', "id":"card_cd"+i,'name':'card_cd'}).val(item.card_cd);
+				
+				var oth_text = $('<input/>').addClass("form-control col-md-4").attr({"name" : "oth_cd"}).hide();
+				card_div.append(label).append(ans_div);
+				ans_div.append($('<select/>').addClass("form-control").attr({"id":"ans_cd_"+i,'name':'ans_cd'})).append(card_hidden).append(oth_text);
+				$('#card_info_div').append(card_div);
+				f_ajaxCommonCode($("#ans_cd_"+i), [item.chgp_cd]);
+				
+			});
+		},
+		error: function(obj) {
+	    	var serverObj = obj.responseJSON;
+	    	alert("code:"+serverObj.code+"\n"+"message:"+cf_msg(serverObj.message)+"\n");
+	    	return;
+	    }
+		
+		
+	});
+	
+}
+
+/**
+ * ==================================================================================
+ * TODO
+ * Others 체크
+ * ==================================================================================
+ */
+$("[name='ans_cd']").change(function(){
+	if(this.val() === 'others'){
+	}
+});
+
+/**
+ * ==================================================================================
+ * RETURN Code 체크(수정요청 코드)
+ * - return list 사유 확인하여 붉은색으로 표시
+ * - rtrn_bcd: 리턴 대분류 코드
+ * - rtrn_scd: 리턴 소분류 코드
+ * ==================================================================================
+ */
+function f_gml_return_check(return_list){
+	
+	$("#image_label").css('background-color','white');
+	$("#translation_label").css('background-color','white');
+	$("#substituted_label").css('background-color','white');
+	$("#relationship_label").css('background-color','white');
+	$("#reason_label").css('background-color','white');
+	$("#gift_list_label").css('background-color','white');
+	
+	$.each(return_list, function(i, item){
+		
+		// 내용 확인필요
+		if(item.rtrn_bcd === "1"){
+			// 최신보고서와 상이, 문장/단어 이해불가
+			if(item.rtrn_scd === "1" || item.rtrn_scd === "2" || item.rtrn_scd === "3" ||
+				item.rtrn_scd === "4" || item.rtrn_scd === "5"){
+				$("#translation_label").css('background-color','red');
+			}
+			// 원본과 영문번역의 양이 상이
+			else if(item.rtrn_scd === "6"){
+				$("#translation_label").css('background-color','red');
+				$("#image_label").css('background-color','red');
+			}
+			// 내용확인필요, 회원편지 내용과 아동편지내용이 너무 다름
+			else if(item.rtrn_scd === "7" || item.rtrn_scd === "8"){
+				$("#translation_label").css('background-color','red');
+			}
+			// 기타
+			else if(item.rtrn_scd === "99"){
+				$("#translation_label").css('background-color','red');
+			}
+		}
+		// 그림 확인필요
+		else if(item.rtrn_bcd === "2"){
+			// 나이에 비해 잘그리거나 못그림
+			if(item.rtrn_scd === "1" || item.rtrn_scd === "2"){
+				$("#image_label").css('background-color','red');
+			}
+			// 편지에 아동이 언급한 그림과 실제 그림 상이
+			else if(item.rtrn_scd === "3"){
+				$("#translation_label").css('background-color','red');
+				$("#image_label").css('background-color','red');
+			}
+			// 기타
+			else if(item.rtrn_scd === "99"){
+				$("#image_label").css('background-color','red');
+			}
+		}
+		// 편지 재요청
+		else if(item.rtrn_bcd === "3"){
+			// 그림 부적격(총, 칼, 십자가)
+			if(item.rtrn_scd === "1"){
+				$("#image_label").css('background-color','red');
+			}
+			// 내용 부적격(종교강요 및 물품요구)
+			else if(item.rtrn_scd === "2"){
+				$("#translation_label").css('background-color','red');
+			}
+			// 기타
+			else if(item.rtrn_scd === "99"){
+				$("#translation_label").css('background-color','red');
+				$("#image_label").css('background-color','red');
+			}
+		}
+		// 대필확인필요
+		else if(item.rtrn_bcd === "4"){
+			$("#substituted_label").css('background-color','red');
+			$("#relationship_label").css('background-color','red');
+			$("#reason_label").css('background-color','red');
+		}
+		// 사진/스캔 확인필요
+		else if(item.rtrn_bcd === "5"){
+			$("#image_label").css('background-color','red');
+		}
+		// 선물내역 확인필요
+		else if(item.rtrn_bcd === "7"){
+			$("#gift_list_label").css('background-color','red');
+		}
+		// 시스템오류
+		else if(item.rtrn_bcd === "97"){
+			// 사진파일공란/깨짐
+			if(item.rtrn_scd === "1"){
+				$("#image_label").css('background-color','red');
+			}
+		}
+	});
+}
+

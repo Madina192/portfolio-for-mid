@@ -1,0 +1,319 @@
+/* ==================================================================================
+ * Copyright © 2018 PENTAWORKS All rights reserved.
+ * ================================================================================== */
+
+$.region_info = {
+	// 아시아
+	"gni-ptw-seoul" : {
+		"region" : "ap-northeast-2",
+		"path"   : "sw"
+	},
+	// 버지니아
+	"gni-ptw-virginia" : {
+		"region" : "us-east-1",
+		"path"   : "vg"
+	},
+	// 아일랜드
+	"gni-ptw-ireland" : {
+		"region" : "eu-west-1",
+		"path"   : "re"
+	}
+}
+
+var _SERVER_GBN = "real";
+if(window.location.href.indexOf('localhost') >= 0 || window.location.href.indexOf('127.0.0.1') >= 0 
+	|| window.location.href.indexOf('52.79.47.95') >= 0 || window.location.href.indexOf('new.gni.kr') >= 0) {
+	_SERVER_GBN = "dev"
+}
+
+//var _S3_BUCKET = localStorage.getItem("bucket") == undefined ? "" : localStorage.getItem("bucket");
+//var _S3_REGION  = $.region_info[localStorage.getItem("bucket")].region;
+
+var _S3_BUCKET = "gni-ptw-seoul"; //서울로 고정
+var _S3_REGION = "ap-northeast-2"; //서울로 고정
+
+var _S3_DEFAULT_PATH = "";
+
+if(_S3_BUCKET != "") {
+	_S3_DEFAULT_PATH = $.region_info[_S3_BUCKET].path == undefined ? "" : $.region_info[_S3_BUCKET].path;
+	if(_S3_DEFAULT_PATH != "") {
+		//_S3_DEFAULT_PATH = _S3_DEFAULT_PATH + "/" + _SERVER_GBN
+		_S3_DEFAULT_PATH = "sw" + "/" + _SERVER_GBN //서울로 고정
+	}
+}
+
+
+var _S3_TARGET_BUCKET = localStorage.getItem("bucket") == undefined ? "" : localStorage.getItem("bucket"); //sync할때는 지정된 S3로 업로드
+var _S3_TARGET_REGION  = $.region_info[localStorage.getItem("bucket")].region; //sync할때는 지정된 S3로 업로드
+
+var _S3_TARGET_PATH = "";
+
+if(_S3_TARGET_BUCKET != "") {
+	_S3_TARGET_PATH = $.region_info[_S3_TARGET_BUCKET].path == undefined ? "" : $.region_info[_S3_TARGET_BUCKET].path;
+	if(_S3_TARGET_PATH != "") {		
+		_S3_TARGET_PATH = _S3_TARGET_PATH + "/" + _SERVER_GBN //sync할때는 지정된 S3로 업로드
+	}
+}
+
+
+// S3 가속 미적용
+//AWS.config.update({accessKeyId: "AKIAIAGD4Y2JJGBATFMQ", secretAccessKey: "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"}); // 기존 서버
+AWS.config.update({accessKeyId: "AKIAIOLIVPCU6BLDARRQ", secretAccessKey: "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"});
+// S3 가속 적용 ( CloudFront에 가속 설정이 되어 있을 경우 ) 
+//AWS.config.update({accessKeyId: "AKIAIOLIVPCU6BLDARRQ", secretAccessKey: "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", useAccelerateEndpoint: true});
+
+function uploadFileImg(imgObjNm, path, fileNm) {
+    var deferred = $.Deferred();
+    var s3 = new AWS.S3({params: {Bucket: _S3_BUCKET}});
+    
+    if (fileNm == "") {
+    	deferred.resolve();
+    	return  deferred.promise();
+    }
+    
+    var file = document.getElementById(imgObjNm).files[0];
+    
+    if (file) {
+    	var params = {
+		  		Key : _S3_DEFAULT_PATH + path + "/" + fileNm,
+		  		ContentType: file.type,
+				Body: file,
+				ACL : "public-read"
+			}
+    	
+    	// Progress Bar 미적용
+    	var upload = s3.upload(params);
+    	upload.send(function(err, data) {
+			if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+    	
+    	// Progress Bar 적용
+    	/*
+    	s3.upload(params).on('httpUploadProgress', function(evt) {
+    		var modalObj = $('.modal-content .modal-body .progress-bar');
+    		var uploadPercent = parseInt((evt.loaded * 100) / evt.total)+'%'
+    		modalObj.css({width : uploadPercent});
+    		modalObj.addClass('progress-bar-striped').addClass('progress-bar-striped active').text(uploadPercent+" Complete (success)");
+    	}).send(function(err, data) {
+    		if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+		*/
+    }
+    else {
+		deferred.reject();
+    }
+    
+    return deferred.promise();
+}
+
+function uploadFileTarget(imgObjNm, path, fileNm) { //sync 할때
+    var deferred = $.Deferred();
+    var s3 = new AWS.S3({params: {Bucket: _S3_TARGET_BUCKET}});
+    
+    if (fileNm == "") {
+    	deferred.resolve();
+    	return  deferred.promise();
+    }
+    
+    var file = document.getElementById(imgObjNm).files[0];
+    
+    if (file) {
+    	var params = {
+		  		Key : _S3_TARGET_PATH + path + "/" + fileNm,
+		  		ContentType: file.type,
+				Body: file,
+				ACL : "public-read"
+			}
+    	
+    	// Progress Bar 미적용
+    	var upload = s3.upload(params);
+    	upload.send(function(err, data) {
+			if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+    	
+    	// Progress Bar 적용
+    	/*
+    	s3.upload(params).on('httpUploadProgress', function(evt) {
+    		var modalObj = $('.modal-content .modal-body .progress-bar');
+    		var uploadPercent = parseInt((evt.loaded * 100) / evt.total)+'%'
+    		modalObj.css({width : uploadPercent});
+    		modalObj.addClass('progress-bar-striped').addClass('progress-bar-striped active').text(uploadPercent+" Complete (success)");
+    	}).send(function(err, data) {
+    		if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+		*/
+    }
+    else {
+		deferred.reject();
+    }
+    
+    return deferred.promise();
+}
+
+
+function uploadFileBlob(blob, path, fileNm) {
+    var deferred = $.Deferred();
+    var s3 = new AWS.S3({params: {Bucket: _S3_BUCKET}});
+    
+    if (fileNm == "") {
+    	deferred.resolve();
+    	return  deferred.promise();
+    }
+    
+    if (blob) {
+    	var params = {
+		  		Key : _S3_DEFAULT_PATH + path + "/" + fileNm,
+		  		ContentType: blob.type,
+				Body: blob,
+				ACL : "public-read"
+			}
+    	// Progress Bar 미적용
+		var upload = s3.upload(params);
+    	upload.send(function(err, data) {
+			if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+    	
+    	// Progress Bar 적용
+    	/*
+    	s3.upload(params).on('httpUploadProgress', function(evt) {
+    		var uploadPercent = parseInt((evt.loaded * 100) / evt.total)+'%'
+    		$('.modal-content .modal-body .progress-bar').css({width : uploadPercent});
+    		$('.modal-content .modal-header h3').text('Uploading - ' + uploadPercent);
+    	}).send(function(err, data) {
+    		if (err) {
+				console.log("Error:", err.code, err.message);
+				deferred.reject(err);
+	        }
+			else {
+	        	deferred.resolve();
+	        }
+		});
+		*/
+    }
+    else {
+		deferred.reject();
+    }
+    
+    return  deferred.promise();
+}
+
+
+
+function uploadFileImgOrientation(imgObjNm, path, fileNm) {
+    var deferred = $.Deferred();
+    var s3 = new AWS.S3({params: {Bucket: _S3_BUCKET, MaxRetries: 15}});
+    
+    if (fileNm == "") {
+    	deferred.resolve();
+    	return  deferred.promise();
+    }
+    
+    var file = document.getElementById(imgObjNm).files[0];
+    
+    if (file) {
+    	var reader = new FileReader();
+
+ 	    reader.onload = function (e) {
+ 	    	loadImage(
+     			e.target.result,
+     		    function (img) {
+     		        if(img.type === "error") {
+     		            console.log("Error loading image");
+     		        } else {
+     		        	
+     		        	img.toBlob(
+ 		        			function(blob) {
+	     		        		var params = {
+	     		       		  		Key : _S3_DEFAULT_PATH + path + "/" + fileNm,
+	     		       		  		ContentType: blob.type,
+	     		       				Body: blob,
+	     		       				ACL : "public-read"
+	     		       			};
+	     		        		
+	     		        		// Progress Bar 미적용
+	     		        		var upload = s3.upload(params);
+		     		           	upload.send(function(err, data) {
+		     		       			if (err) {
+		     		       				console.log("Error:", err.code, err.message);
+		     		       				deferred.reject(err);
+		     		       	        }
+		     		       			else {
+		     		       	        	deferred.resolve();
+		     		       	        }
+		     		       		});
+		     		           	
+			     		        // Progress Bar 적용
+			     		       	/*
+			     		       	s3.upload(params).on('httpUploadProgress', function(evt) {
+			     		       		var uploadPercent = parseInt((evt.loaded * 100) / evt.total)+'%'
+			     		       		$('.modal-content .modal-body .progress-bar').css({width : uploadPercent});
+			     		       		$('.modal-content .modal-header h3').text('Uploading - ' + uploadPercent);
+			     		       	}).send(function(err, data) {
+			     		       		if (err) {
+			     		   				console.log("Error:", err.code, err.message);
+			     		   				deferred.reject(err);
+			     		   	        }
+			     		   			else {
+			     		   	        	deferred.resolve();
+			     		   	        }
+			     		   		});
+			     		   		*/
+	     		        	}
+	     		        	, 'image/jpeg'
+	     		        	, 0.8
+     		        	);
+     		        }
+     		    },
+     		    {orientation: true, canvas: true}
+     		);
+         }
+
+ 	    reader.readAsDataURL(file);
+    }
+    else {
+		deferred.reject();
+    }
+    
+    return deferred.promise();
+}
+
+// Board 파일 업로드 사이즈 제한
+var notiMaxSize = 1024 * 1024 * 50;
+var qnaMaxSize = 1024 * 1024 * 50;
+var referMaxSize = 1024 * 1024 * 50;
+
+// 아동 사진, 스캔, 비디오  파일 업로드 사이즈 제한
+var childMaxSize = 1024 * 500;
+var ACLMaxSize = 1024 * 1024 * 2;
+var scanMaxSize = 1024 * 1024;
+var videoMaxSize = 1024 * 1024 * 5;

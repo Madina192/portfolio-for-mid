@@ -1,0 +1,13 @@
+//----- 공통 다이얼로그 TITLE 영역 CSS 변경 ----- // 
+$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+	_title : function(title) {
+		if (!this.options.title) {
+			title.html("&#160;");
+		} else {
+			title.html(this.options.title);
+		}
+	}
+}));
+
+
+
